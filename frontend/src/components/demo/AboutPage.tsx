@@ -1,4 +1,5 @@
 import Header from "../layout/Header";
+import { DEMO_MARKET_STATS } from "../../data/demoExtras";
 import { Info, Layers, Settings } from "../ui/icons";
 
 export default function AboutPage() {
@@ -41,6 +42,9 @@ export default function AboutPage() {
             <li>XGB: احتمال تلاعب (synthetic inject)</li>
             <li>Rules: CFO/NI، ذمم، TATA</li>
           </ul>
+          <p className="mt-4 text-[10px] text-ink-faint">
+            مصادر: {DEMO_MARKET_STATS.data_sources.join(" · ")} · آخر تحديث: {DEMO_MARKET_STATS.last_refresh}
+          </p>
         </article>
       </section>
 
@@ -62,8 +66,8 @@ export default function AboutPage() {
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[
-          { n: "24", label: "شركة مراقَبة" },
-          { n: "6", label: "قواعد إشارات" },
+          { n: String(DEMO_MARKET_STATS.companies_scored), label: "شركة مراقَبة" },
+          { n: String(DEMO_MARKET_STATS.flags_active), label: "إشارة نشطة" },
           { n: "8", label: "مؤشرات Beneish" },
           { n: "57", label: "درجة موبايلي 2013" },
         ].map((s) => (

@@ -81,6 +81,16 @@ export const DEMO_ALERTS: DemoAlert[] = [
     evidence: { metric: "cfo_to_net_income", value: 0.38, threshold: 0.5, year: 2025 },
   },
   {
+    ticker: "4001.SR",
+    company_ar: "العثيم",
+    year: 2025,
+    flag_id: "tata_high",
+    title_ar: "استحقاقات عالية",
+    severity: "critical",
+    explanation_ar: "فرق كبير بين الأرباح والتدفق النقدي بالنسبة للأصول — إشارة TATA قوية.",
+    evidence: { metric: "TATA", value: 0.062, threshold: 0.05, year: 2025 },
+  },
+  {
     ticker: "7020.SR",
     company_ar: "موبايلي",
     year: 2013,
@@ -111,6 +121,16 @@ export const DEMO_ALERTS: DemoAlert[] = [
     evidence: { metric: "TATA", value: 0.061, threshold: 0.05, year: 2013 },
   },
   {
+    ticker: "7020.SR",
+    company_ar: "موبايلي",
+    year: 2013,
+    flag_id: "cfo_ni_low_streak",
+    title_ar: "أرباح بلا تدفق نقدي",
+    severity: "critical",
+    explanation_ar: "سنتان متتاليتان: CFO/NI = 0.17 — نمط موبايلي قبل إعادة الإصدار.",
+    evidence: { metric: "cfo_to_net_income", value: 0.17, threshold: 0.5, year: 2013 },
+  },
+  {
     ticker: "2140.SR",
     company_ar: "سليمان الحبيب",
     year: 2025,
@@ -119,6 +139,66 @@ export const DEMO_ALERTS: DemoAlert[] = [
     severity: "warning",
     explanation_ar: "تباطؤ ملحوظ في الإهلاك — قد يضخّم الأرباح.",
     evidence: { metric: "DEPI", value: 1.28, threshold: 1.2, year: 2025 },
+  },
+  {
+    ticker: "2140.SR",
+    company_ar: "سليمان الحبيب",
+    year: 2025,
+    flag_id: "receivables_outpace_revenue",
+    title_ar: "نمو الذمم أسرع من المبيعات",
+    severity: "warning",
+    explanation_ar: "ذمم التأمين الطبي تنمو أسرع من إيرادات المستشفيات.",
+    evidence: { metric: "receivables_to_revenue_growth", value: 1.62, threshold: 1.5, year: 2025 },
+  },
+  {
+    ticker: "4005.SR",
+    company_ar: "الرعاية الطبية",
+    year: 2025,
+    flag_id: "cfo_ni_low_streak",
+    title_ar: "أرباح بلا تدفق نقدي",
+    severity: "warning",
+    explanation_ar: "تدفق تشغيلي ضعيف مقارنة بصافي الربح — يستحق المتابعة.",
+    evidence: { metric: "cfo_to_net_income", value: 0.48, threshold: 0.5, year: 2025 },
+  },
+  {
+    ticker: "4005.SR",
+    company_ar: "الرعاية الطبية",
+    year: 2025,
+    flag_id: "receivables_outpace_revenue",
+    title_ar: "نمو الذمم أسرع من المبيعات",
+    severity: "warning",
+    explanation_ar: "ذمم مدينة مرتفعة نسبياً لقطاع الرعاية الصحية.",
+    evidence: { metric: "receivables_to_revenue_growth", value: 1.55, threshold: 1.5, year: 2025 },
+  },
+  {
+    ticker: "4004.SR",
+    company_ar: "دلة للرعاية",
+    year: 2025,
+    flag_id: "depi_high",
+    title_ar: "تباطؤ الإهلاك",
+    severity: "warning",
+    explanation_ar: "انخفاض نسبة الإهلاك للأصول الثابتة — قد يضخّم الربح التشغيلي.",
+    evidence: { metric: "DEPI", value: 1.22, threshold: 1.2, year: 2025 },
+  },
+  {
+    ticker: "4240.SR",
+    company_ar: "إكسترا",
+    year: 2025,
+    flag_id: "receivables_outpace_revenue",
+    title_ar: "نمو الذمم أسرع من المبيعات",
+    severity: "warning",
+    explanation_ar: "ذمم العملاء تنمو أسرع من مبيعات الإلكترونيات.",
+    evidence: { metric: "receivables_to_revenue_growth", value: 1.58, threshold: 1.5, year: 2025 },
+  },
+  {
+    ticker: "2010.SR",
+    company_ar: "سابك",
+    year: 2025,
+    flag_id: "data_partial",
+    title_ar: "بيانات جزئية",
+    severity: "info",
+    explanation_ar: "ثقة متوسطة — بيانات COGS ناقصة جزئياً من yfinance.",
+    evidence: { metric: "confidence", value: 0.72, threshold: 0.85, year: 2025 },
   },
   {
     ticker: "4300.SR",
@@ -148,6 +228,119 @@ const DEMO_SECTOR_AVG_RETAIL = {
   DSRI: 1.05, GMI: 1.01, AQI: 1.0, SGI: 1.08,
   DEPI: 1.0, SGAI: 1.01, LVGI: 1.05, TATA: 0.028,
 };
+
+const DEMO_PROFILES: Record<string, CompanyProfile> = {
+  "4001.SR": {
+    summary_ar: "سلسلة سوبرماركت رائدة في المملكة — أكثر من 230 فرعاً. نمو الذمم المدينة ارتفع 157% بين 2024–2025 بينما المبيعات نمت 3% فقط.",
+    market_cap_ar: "7.2 مليار ريال",
+    employees: "~12,000",
+    exchange: "تداول (السوق الرئيسي)",
+    data_source: "yfinance + تداول",
+    last_scan: "اليوم 05:42",
+  },
+  "7020.SR": {
+    summary_ar: "مشغّل اتصالات جوال — حالة دراسية لإعادة إصدار القوائم نوفمبر 2014 بخفض 1.43 مليار ريال. رقيب أظهر درجة 57 في 2013 قبل الإعلان.",
+    market_cap_ar: "18.5 مليار ريال",
+    employees: "~4,200",
+    exchange: "تداول (السوق الرئيسي)",
+    data_source: "CSV backtest + yfinance",
+    last_scan: "Backtest 2013",
+  },
+  "2140.SR": {
+    summary_ar: "مجموعة مستشفيات خاصة — نمو عبر الاستحواذات والتوسع الجغرافي. إشارة DEPI مرتفعة تشير لتباطؤ الإهلاك.",
+    market_cap_ar: "52 مليار ريال",
+    employees: "~18,000",
+    exchange: "تداول (السوق الرئيسي)",
+    data_source: "yfinance",
+    last_scan: "اليوم 05:42",
+  },
+  "4300.SR": {
+    summary_ar: "مطوّر عقاري — مشاريع سكنية وتجارية في الرياض وجدة. رافعة مالية مرتفعة مع LVGI=1.35.",
+    market_cap_ar: "4.8 مليار ريال",
+    employees: "~1,200",
+    exchange: "تداول (السوق الرئيسي)",
+    data_source: "yfinance",
+    last_scan: "اليوم 05:42",
+  },
+  "4005.SR": {
+    summary_ar: "مستشفى خاص في الرياض — قطاع الرعاية الصحية مع ذمم تأمين مرتفعة نسبياً.",
+    market_cap_ar: "2.1 مليار ريال",
+    employees: "~2,800",
+    exchange: "تداول (السوق الرئيسي)",
+    data_source: "yfinance",
+    last_scan: "اليوم 05:42",
+  },
+  "2222.SR": {
+    summary_ar: "أكبر شركة نفط في العالم — قوائم مالية شفافة نسبياً، درجة مخاطر منخفضة ومستقرة.",
+    market_cap_ar: "6.8 تريليون ريال",
+    employees: "~70,000",
+    exchange: "تداول (السوق الرئيسي)",
+    data_source: "yfinance",
+    last_scan: "اليوم 05:42",
+  },
+};
+
+const DEMO_BREAKDOWNS: Record<string, ScoreBreakdown> = {
+  "4001.SR": { m_score_norm: 72, anomaly_score: 58, xgb_score: 45, rule_flags_score: 85 },
+  "7020.SR": { m_score_norm: 68, anomaly_score: 52, xgb_score: 41, rule_flags_score: 78 },
+  "2140.SR": { m_score_norm: 55, anomaly_score: 48, xgb_score: 35, rule_flags_score: 62 },
+  "4300.SR": { m_score_norm: 38, anomaly_score: 32, xgb_score: 22, rule_flags_score: 48 },
+  "4005.SR": { m_score_norm: 35, anomaly_score: 30, xgb_score: 20, rule_flags_score: 42 },
+};
+
+const DEMO_NOTES: Record<string, string> = {
+  "4001.SR": "ملاحظة المحلل: نمط مشابه لموبايلي 2013 — ذمم تنمو أسرع بكثير من المبيعات مع CFO/NI منخفض. يُنصح بمراجعة سياسة الاعتراف بالإيراد.",
+  "7020.SR": "ملاحظة المحلل: Backtest ناجح — 4 إشارات حرجة في 2013 قبل إعادة الإصدار بـ 11 شهراً. درجة 57 ضمن نطاق high risk.",
+  "2140.SR": "ملاحظة المحلل: DEPI مرتفع قد يعكس تمديد العمر الإنتاجي للأصول أو تباطؤ الإهلاك بعد استحواذات.",
+  "4300.SR": "ملاحظة المحلل: قطاع عقاري حساس للرافعة — LVGI فوق 1.2 يستدعي متابعة تمويل المشاريع قيد الإنشاء.",
+};
+
+function breakdownForScore(score: number, level: string): ScoreBreakdown {
+  const mult = level === "high" ? 1.1 : level === "medium" ? 0.75 : 0.4;
+  return {
+    m_score_norm: Math.min(95, Math.round(score * 0.45 * mult + 10)),
+    anomaly_score: Math.min(90, Math.round(score * 0.35 * mult)),
+    xgb_score: Math.min(80, Math.round(score * 0.25 * mult)),
+    rule_flags_score: Math.min(95, Math.round(score * 0.5 * mult)),
+  };
+}
+
+function profileForCompany(c: CompanySummary): CompanyProfile {
+  const known = DEMO_PROFILES[c.ticker];
+  if (known) return known;
+  return {
+    summary_ar: `${c.name_ar} — شركة مدرجة في قطاع ${c.sector}. تخضع لمراقبة رقيب الدورية.`,
+    market_cap_ar: "غير متوفر",
+    employees: "—",
+    exchange: "تداول",
+    data_source: c.data_status === "partial" ? "yfinance (جزئي)" : "yfinance",
+    last_scan: "اليوم 05:42",
+  };
+}
+
+function enrichDetail(detail: CompanyDetail): CompanyDetail {
+  const level = detail.risk_level ?? "low";
+  const score = detail.risk_score ?? 15;
+  return {
+    ...detail,
+    profile: detail.profile ?? profileForCompany(detail),
+    score_breakdown: detail.score_breakdown ?? DEMO_BREAKDOWNS[detail.ticker] ?? breakdownForScore(score, level),
+    analyst_note_ar: detail.analyst_note_ar ?? DEMO_NOTES[detail.ticker] ?? (
+      score > 40
+        ? `ملاحظة المحلل: درجة ${score} — يُنصح بمراجعة القوائم المالية والإشارات النشطة.`
+        : score > 25
+          ? `ملاحظة المحلل: مخاطر متوسطة — متابعة دورية كافية حالياً.`
+          : undefined
+    ),
+    top_flags: detail.top_flags.length > 0
+      ? detail.top_flags
+      : (DEMO_FLAGS[detail.ticker] ?? []).slice(0, 3).map((f) => ({
+          flag_id: f.flag_id,
+          title_ar: f.title_ar,
+          severity: f.severity,
+        })),
+  };
+}
 
 const DEMO_DETAILS: Record<string, CompanyDetail> = {
   "4001.SR": {
@@ -185,6 +378,9 @@ const DEMO_DETAILS: Record<string, CompanyDetail> = {
     confidence: "high",
     confidence_pct: 95,
     scoring_eligible: true,
+    profile: DEMO_PROFILES["4001.SR"],
+    score_breakdown: DEMO_BREAKDOWNS["4001.SR"],
+    analyst_note_ar: DEMO_NOTES["4001.SR"],
   },
   "7020.SR": {
     ticker: "7020.SR",
@@ -221,6 +417,9 @@ const DEMO_DETAILS: Record<string, CompanyDetail> = {
     confidence: "high",
     confidence_pct: 92,
     scoring_eligible: true,
+    profile: DEMO_PROFILES["7020.SR"],
+    score_breakdown: DEMO_BREAKDOWNS["7020.SR"],
+    analyst_note_ar: DEMO_NOTES["7020.SR"],
   },
   "2140.SR": {
     ticker: "2140.SR",
@@ -251,6 +450,41 @@ const DEMO_DETAILS: Record<string, CompanyDetail> = {
     confidence: "high",
     confidence_pct: 88,
     scoring_eligible: true,
+    profile: DEMO_PROFILES["2140.SR"],
+    score_breakdown: DEMO_BREAKDOWNS["2140.SR"],
+    analyst_note_ar: DEMO_NOTES["2140.SR"],
+  },
+  "4300.SR": {
+    ticker: "4300.SR",
+    name_ar: "دار الأركان",
+    name_en: "Dar Al Arkan",
+    sector: "Real Estate",
+    risk_score: 41,
+    risk_level: "medium",
+    trend: "down",
+    m_score: -2.05,
+    latest_year: 2025,
+    score_history: [
+      { year: 2022, risk_score: 28, m_score: -2.4 },
+      { year: 2023, risk_score: 32, m_score: -2.25 },
+      { year: 2024, risk_score: 38, m_score: -2.12 },
+      { year: 2025, risk_score: 41, m_score: -2.05 },
+    ],
+    flags_count: 1,
+    top_flags: [
+      { flag_id: "lvgi_spike", title_ar: "قفزة في الرافعة المالية", severity: "warning" },
+    ],
+    key_metrics: { cfo_to_net_income: 0.85, gross_margin: 0.32, debt_to_equity: 1.85, receivables_to_revenue_growth: 1.1 },
+    shap_top1: "رفعت الدرجة: LVGI=1.35 — رافعة مالية مرتفعة في قطاع العقار",
+    indicators: { DSRI: 1.05, GMI: 1.02, AQI: 1.08, SGI: 1.1, DEPI: 1.0, SGAI: 1.01, LVGI: 1.35, TATA: 0.035 },
+    sector_avg_indicators: { DSRI: 1.0, GMI: 1.0, AQI: 1.0, SGI: 1.05, DEPI: 1.0, SGAI: 1.0, LVGI: 1.08, TATA: 0.025 },
+    data_status: "ok",
+    confidence: "medium",
+    confidence_pct: 82,
+    scoring_eligible: true,
+    profile: DEMO_PROFILES["4300.SR"],
+    score_breakdown: DEMO_BREAKDOWNS["4300.SR"],
+    analyst_note_ar: DEMO_NOTES["4300.SR"],
   },
 };
 
@@ -259,6 +493,10 @@ export const DEMO_FLAGS: Record<string, FlagItem[]> = {
   "7020.SR": DEMO_ALERTS.filter((a) => a.ticker === "7020.SR").map(({ ticker: _t, company_ar: _c, year: _y, ...f }) => f),
   "2140.SR": DEMO_ALERTS.filter((a) => a.ticker === "2140.SR").map(({ ticker: _t, company_ar: _c, year: _y, ...f }) => f),
   "4300.SR": DEMO_ALERTS.filter((a) => a.ticker === "4300.SR").map(({ ticker: _t, company_ar: _c, year: _y, ...f }) => f),
+  "4005.SR": DEMO_ALERTS.filter((a) => a.ticker === "4005.SR").map(({ ticker: _t, company_ar: _c, year: _y, ...f }) => f),
+  "4004.SR": DEMO_ALERTS.filter((a) => a.ticker === "4004.SR").map(({ ticker: _t, company_ar: _c, year: _y, ...f }) => f),
+  "4240.SR": DEMO_ALERTS.filter((a) => a.ticker === "4240.SR").map(({ ticker: _t, company_ar: _c, year: _y, ...f }) => f),
+  "2010.SR": DEMO_ALERTS.filter((a) => a.ticker === "2010.SR").map(({ ticker: _t, company_ar: _c, year: _y, ...f }) => f),
 };
 
 function genericDetail(c: CompanySummary): CompanyDetail {
@@ -299,12 +537,25 @@ export function getDemoCompany(ticker: string): CompanyDetail | null {
     detail = summary ? genericDetail(summary) : null;
   }
   if (!detail) return null;
-  return { ...detail, financial_statements: getDemoFinancials(norm) };
+  const enriched = enrichDetail(detail);
+  return { ...enriched, financial_statements: getDemoFinancials(norm) };
 }
 
 export function getDemoFlags(ticker: string): FlagItem[] {
   const norm = ticker.includes(".") ? ticker : `${ticker}.SR`;
-  return DEMO_FLAGS[norm] ?? [];
+  if (DEMO_FLAGS[norm]?.length) return DEMO_FLAGS[norm];
+  const summary = DEMO_COMPANIES.find((c) => c.ticker === norm);
+  const score = summary?.risk_score ?? 0;
+  if (score > 30) {
+    return [{
+      flag_id: "anomaly_detected",
+      title_ar: "انحراف إحصائي",
+      severity: score > 50 ? "critical" : "warning",
+      explanation_ar: `Isolation Forest يكتشف انحرافاً عن متوسط قطاع ${summary?.sector ?? ""}.`,
+      evidence: { metric: "anomaly_score", value: score, threshold: 30, year: 2025 },
+    }];
+  }
+  return [];
 }
 
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));

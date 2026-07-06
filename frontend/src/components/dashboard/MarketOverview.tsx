@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createDataSource } from "../../api/dataSource";
 import { useDemoMode } from "../../hooks/useDemoMode";
 import type { CompanySummary, MarketOverview } from "../../api/client";
+import { DEMO_ACTIVITY, SECTOR_AR } from "../../data/demoExtras";
 import ErrorBanner from "../ui/ErrorBanner";
 import EmptyState from "../ui/EmptyState";
 import { HeroSkeleton, TableSkeleton } from "../ui/Skeleton";
@@ -10,6 +11,8 @@ import DemoBanner from "../layout/DemoBanner";
 import RiskDonut from "./RiskDonut";
 import CompanyTable from "./CompanyTable";
 import RefreshDemoButton from "../demo/RefreshDemoButton";
+import MarketStatsBar from "./MarketStatsBar";
+import ActivityFeed from "./ActivityFeed";
 
 type Props = { onSelect: (ticker: string) => void };
 
@@ -76,6 +79,7 @@ export default function MarketOverviewPage({ onSelect }: Props) {
     <>
       <Header subtitle="منصة رقابة مالية استباقية" />
       <DemoBanner />
+      <MarketStatsBar />
 
       {/* Hero */}
       <section className="mb-6 grid gap-6 rounded-xl border border-line bg-white p-6 shadow-sm dark:border-bg/10 dark:bg-ink/30 lg:grid-cols-[1fr_320px]">
@@ -113,6 +117,10 @@ export default function MarketOverviewPage({ onSelect }: Props) {
         </section>
       )}
 
+      {demoMode && (
+        <ActivityFeed items={DEMO_ACTIVITY} onSelect={onSelect} className="mb-6" />
+      )}
+
       {/* Sector filter */}
       <div className="mb-4 flex flex-wrap gap-2">
         <button
@@ -133,7 +141,7 @@ export default function MarketOverviewPage({ onSelect }: Props) {
               sector === s ? "bg-ink text-bg dark:bg-primary" : "border border-line bg-white text-ink-soft dark:bg-ink/30 dark:text-bg"
             }`}
           >
-            {s}
+            {SECTOR_AR[s] ?? s}
           </button>
         ))}
       </div>

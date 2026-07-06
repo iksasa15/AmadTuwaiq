@@ -18,7 +18,7 @@ export type SectorMeta = {
 export const DEMO_MARKET_STATS = {
   companies_scored: 24,
   banks_excluded: 6,
-  flags_active: 18,
+  flags_active: 15,
   last_refresh: "اليوم 05:42",
   data_sources: ["yfinance", "تداول", "CSV يدوي"],
   models: ["Beneish M-Score", "Isolation Forest", "XGBoost", "قواعد إشارات"],

@@ -18,6 +18,7 @@ import FlagCard from "./FlagCard";
 import ScoreHistoryChart from "./ScoreHistoryChart";
 import IndicatorsRadar from "./IndicatorsRadar";
 import FinancialStatementsPanel from "./FinancialStatements";
+import { CompanyProfileCard, ScoreBreakdownCard } from "./CompanyExtras";
 
 type Props = { ticker: string; onBack: () => void };
 type PageTab = "overview" | "statements" | "flags";
@@ -167,6 +168,8 @@ export default function CompanyPage({ ticker, onBack }: Props) {
       {/* Tab: Overview */}
       {tab === "overview" && (
         <div className="space-y-6">
+          <CompanyProfileCard company={company} />
+
           <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
             {[
               { label: "CFO / الربح", val: m.cfo_to_net_income?.toFixed(2) ?? "—", warn: (m.cfo_to_net_income ?? 1) < 0.5 },
@@ -197,6 +200,8 @@ export default function CompanyPage({ ticker, onBack }: Props) {
             <ScoreHistoryChart history={company.score_history} />
             <IndicatorsRadar indicators={company.indicators} sectorAvg={company.sector_avg_indicators} />
           </div>
+
+          <ScoreBreakdownCard company={company} />
         </div>
       )}
 

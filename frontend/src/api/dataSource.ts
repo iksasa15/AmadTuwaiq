@@ -12,6 +12,7 @@ import {
 
 export type { DemoAlert } from "../data/demo";
 export { DEMO_ALERTS, MOBILY_TIMELINE };
+export { DEMO_ACTIVITY, DEMO_MARKET_STATS, DEMO_SECTOR_META, SECTOR_AR } from "../data/demoExtras";
 
 export function createDataSource(demoMode: boolean) {
   return {
