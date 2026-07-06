@@ -2,6 +2,7 @@ import { useState } from "react";
 import { DEMO_NETWORK } from "../../data/strategicDemo";
 import { RISK_COLOR, type RiskLevel } from "../../utils/risk";
 import { GitBranch } from "../ui/icons";
+import Card from "../ui/Card";
 
 type Props = { onSelect?: (ticker: string) => void };
 
@@ -28,7 +29,7 @@ export default function ForensicNetwork({ onSelect }: Props) {
 
   return (
     <div className="space-y-4">
-      <div className="rounded-xl border border-accent/30 bg-accent/5 p-4 dark:bg-accent/10">
+      <Card variant="accent" padding="sm">
         <p className="flex items-center gap-2 text-sm font-bold text-accent">
           <GitBranch className="h-4 w-4" strokeWidth={2} />
           غير موجود في البنك — تحقيق جنائي بصري
@@ -36,9 +37,9 @@ export default function ForensicNetwork({ onSelect }: Props) {
         <p className="mt-2 text-sm text-ink-soft dark:text-bg/75">
           الاحتيال يظهر عبر ترابط الكيانات وتدفق الذمم — ليس في جدول معزول.
         </p>
-      </div>
+      </Card>
 
-      <div className="overflow-x-auto rounded-xl border border-line bg-white dark:border-bg/10 dark:bg-ink/30">
+      <Card padding="none" className="overflow-x-auto">
         <svg viewBox="0 0 800 340" className="w-full min-w-[600px]">
           {DEMO_NETWORK.edges.map((e) => {
             const from = nodeById[e.from];
@@ -115,7 +116,7 @@ export default function ForensicNetwork({ onSelect }: Props) {
             );
           })}
         </svg>
-      </div>
+      </Card>
 
       <div className="flex flex-wrap gap-3 text-xs">
         {(["high", "medium", "low"] as RiskLevel[]).map((l) => (

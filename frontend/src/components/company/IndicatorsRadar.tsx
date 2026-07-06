@@ -9,6 +9,7 @@ import {
 } from "recharts";
 import type { IndicatorSet } from "../../api/client";
 import { INDICATOR_KEYS, INDICATOR_LABELS } from "../../utils/risk";
+import Card from "../ui/Card";
 
 type Props = {
   indicators: IndicatorSet | null | undefined;
@@ -31,8 +32,8 @@ export default function IndicatorsRadar({ indicators, sectorAvg }: Props) {
   }));
 
   return (
-    <div className="rounded-2xl border border-line bg-white p-5 dark:border-bg/10 dark:bg-ink/30">
-      <h3 className="mb-4 font-bold text-ink dark:text-bg">المؤشرات vs متوسط القطاع</h3>
+    <Card variant="elevated">
+      <h3 className="section-title mb-4">المؤشرات vs متوسط القطاع</h3>
       <ResponsiveContainer width="100%" height={280}>
         <RadarChart data={data} cx="50%" cy="50%" outerRadius="70%">
           <PolarGrid stroke="rgba(12,35,65,0.15)" />
@@ -43,6 +44,6 @@ export default function IndicatorsRadar({ indicators, sectorAvg }: Props) {
           <Legend />
         </RadarChart>
       </ResponsiveContainer>
-    </div>
+    </Card>
   );
 }

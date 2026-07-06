@@ -1,17 +1,16 @@
+import Button from "./Button";
+import Card from "./Card";
+
 export default function ErrorBanner({ message, onRetry }: { message: string; onRetry?: () => void }) {
   return (
-    <div className="rounded-xl border border-accent/40 bg-accent/10 p-4 text-sm text-ink dark:text-bg">
-      <p className="font-semibold">تعذّر تحميل البيانات</p>
-      <p className="mt-1 opacity-80">{message}</p>
+    <Card variant="accent" className="border-accent/40 bg-accent/10">
+      <p className="text-sm font-semibold text-ink dark:text-bg">تعذّر تحميل البيانات</p>
+      <p className="mt-1 text-sm opacity-80">{message}</p>
       {onRetry && (
-        <button
-          type="button"
-          onClick={onRetry}
-          className="mt-3 rounded-lg bg-primary px-4 py-2 text-xs font-bold text-white"
-        >
+        <Button variant="primary" size="sm" onClick={onRetry} className="mt-3">
           إعادة المحاولة
-        </button>
+        </Button>
       )}
-    </div>
+    </Card>
   );
 }

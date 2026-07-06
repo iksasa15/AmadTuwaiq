@@ -1,5 +1,11 @@
+import { cn } from "../../lib/cn";
+
 export function Skeleton({ className = "" }: { className?: string }) {
-  return <div className={`animate-pulse rounded-lg bg-line/60 ${className}`} />;
+  return (
+    <div
+      className={cn("animate-pulse rounded-[var(--radius-card)] bg-line/60", className)}
+    />
+  );
 }
 
 export function TableSkeleton() {

@@ -11,6 +11,8 @@ import {
 } from "recharts";
 import type { TimelineResponse } from "../../api/client";
 import { RISK_COLOR } from "../../utils/risk";
+import Card from "../ui/Card";
+import Disclaimer from "../ui/Disclaimer";
 
 type Point = { year: number; risk_score: number };
 
@@ -27,8 +29,8 @@ export default function ScoreHistoryChart({ history, timeline }: Props) {
   const showHistorical = timeline?.has_known_case && timeline.points.length > 0;
 
   return (
-    <div className="rounded-2xl border border-line bg-white p-5 dark:border-bg/10 dark:bg-ink/30">
-      <h3 className="mb-2 font-bold text-ink dark:text-bg">تطور درجة المخاطر</h3>
+    <Card variant="elevated">
+      <h3 className="section-title mb-2">تطور درجة المخاطر</h3>
 
       {showHistorical && timeline?.months_before_official != null && timeline.months_before_official > 0 && (
         <p className="mb-3 inline-flex rounded-full bg-green-500/15 px-3 py-1 text-xs font-bold text-green-700 dark:text-green-400">
@@ -71,9 +73,7 @@ export default function ScoreHistoryChart({ history, timeline }: Props) {
         </p>
       )}
 
-      <p className="mt-2 text-[10px] text-ink-faint">
-        مؤشر تحليلي يستدعي تدقيقًا إضافيًا، ليس اتهامًا.
-      </p>
-    </div>
+      <Disclaimer className="mt-2" />
+    </Card>
   );
 }

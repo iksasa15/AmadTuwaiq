@@ -1,6 +1,8 @@
 import type { CompanyDetail, ScoreBreakdown } from "../../api/client";
 import { RISK_COLOR } from "../../utils/risk";
 import { Building2, Calendar, Database, Users } from "../ui/icons";
+import Card from "../ui/Card";
+import Section from "../ui/Section";
 
 const WEIGHTS = { m: 0.4, if: 0.2, xgb: 0.15, rules: 0.25 };
 
@@ -30,29 +32,30 @@ export function CompanyProfileCard({ company }: Props) {
   if (!p) return null;
 
   return (
-    <section className="rounded-xl border border-line bg-white p-5 dark:border-bg/10 dark:bg-ink/30">
-      <h2 className="mb-3 text-sm font-bold text-ink-faint">نبذة الشركة</h2>
-      <p className="text-sm leading-relaxed text-ink-soft dark:text-bg/80">{p.summary_ar}</p>
-      <dl className="mt-4 grid grid-cols-2 gap-3 text-xs lg:grid-cols-4">
-        {[
-          { icon: Building2, label: "القيمة السوقية", val: p.market_cap_ar },
-          { icon: Users, label: "الموظفون", val: p.employees },
-          { icon: Database, label: "مصدر البيانات", val: p.data_source },
-          { icon: Calendar, label: "آخر فحص", val: p.last_scan },
-        ].map((item) => (
-          <div key={item.label} className="rounded-lg bg-bg-deep/50 p-3 dark:bg-ink/40">
-            <item.icon className="mb-1 h-3.5 w-3.5 text-primary" strokeWidth={2} />
-            <dt className="text-ink-faint">{item.label}</dt>
-            <dd className="mt-0.5 font-bold text-ink dark:text-bg">{item.val}</dd>
-          </div>
-        ))}
-      </dl>
-      {company.analyst_note_ar && (
-        <p className="mt-4 rounded-lg border border-primary/20 bg-primary/5 px-3 py-2 text-xs leading-relaxed text-ink-soft dark:text-bg/75">
-          {company.analyst_note_ar}
-        </p>
-      )}
-    </section>
+    <Section title="نبذة الشركة">
+      <Card>
+        <p className="text-sm leading-relaxed text-ink-soft dark:text-bg/80">{p.summary_ar}</p>
+        <dl className="mt-4 grid grid-cols-2 gap-3 text-xs lg:grid-cols-4">
+          {[
+            { icon: Building2, label: "القيمة السوقية", val: p.market_cap_ar },
+            { icon: Users, label: "الموظفون", val: p.employees },
+            { icon: Database, label: "مصدر البيانات", val: p.data_source },
+            { icon: Calendar, label: "آخر فحص", val: p.last_scan },
+          ].map((item) => (
+            <div key={item.label} className="rounded-[var(--radius-control)] bg-bg-deep/50 p-3 dark:bg-ink/40">
+              <item.icon className="mb-1 h-3.5 w-3.5 text-primary" strokeWidth={2} />
+              <dt className="text-ink-faint">{item.label}</dt>
+              <dd className="mt-0.5 font-bold text-ink dark:text-bg">{item.val}</dd>
+            </div>
+          ))}
+        </dl>
+        {company.analyst_note_ar && (
+          <Card variant="accent" padding="sm" className="mt-4 text-xs leading-relaxed text-ink-soft dark:text-bg/75">
+            {company.analyst_note_ar}
+          </Card>
+        )}
+      </Card>
+    </Section>
   );
 }
 
@@ -66,31 +69,32 @@ export function ScoreBreakdownCard({ company }: Props) {
   ];
 
   return (
-    <section className="rounded-xl border border-line bg-white p-5 dark:border-bg/10 dark:bg-ink/30">
-      <h2 className="mb-4 text-sm font-bold text-ink-faint">تفكيك الدرجة المركّبة</h2>
-      <div className="space-y-3">
-        {items.map((item) => (
-          <div key={item.label}>
-            <div className="mb-1 flex justify-between text-xs">
-              <span className="font-semibold text-ink-soft dark:text-bg/80">
-                {item.label}
-                <span className="mr-1 text-ink-faint">({item.weight})</span>
-              </span>
-              <span className="font-bold" style={{ color: item.color }}>{item.value}</span>
+    <Section title="تفكيك الدرجة المركّبة">
+      <Card>
+        <div className="space-y-3">
+          {items.map((item) => (
+            <div key={item.label}>
+              <div className="mb-1 flex justify-between text-xs">
+                <span className="font-semibold text-ink-soft dark:text-bg/80">
+                  {item.label}
+                  <span className="mr-1 text-ink-faint">({item.weight})</span>
+                </span>
+                <span className="font-bold" style={{ color: item.color }}>{item.value}</span>
+              </div>
+              <div className="h-2 overflow-hidden rounded-full bg-bg-deep dark:bg-ink/60">
+                <div
+                  className="h-full rounded-full transition-all"
+                  style={{ width: `${item.value}%`, background: item.color }}
+                />
+              </div>
             </div>
-            <div className="h-2 overflow-hidden rounded-full bg-bg-deep dark:bg-ink/60">
-              <div
-                className="h-full rounded-full transition-all"
-                style={{ width: `${item.value}%`, background: item.color }}
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-      <p className="mt-4 text-center text-2xl font-black" style={{ color: RISK_COLOR[company.risk_level ?? "low"] }}>
-        {company.risk_score}
-        <span className="mr-2 text-sm font-semibold text-ink-faint">الدرجة النهائية</span>
-      </p>
-    </section>
+          ))}
+        </div>
+        <p className="mt-4 text-center text-2xl font-black" style={{ color: RISK_COLOR[company.risk_level ?? "low"] }}>
+          {company.risk_score}
+          <span className="mr-2 text-sm font-semibold text-ink-faint">الدرجة النهائية</span>
+        </p>
+      </Card>
+    </Section>
   );
 }

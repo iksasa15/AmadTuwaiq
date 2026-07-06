@@ -1,7 +1,7 @@
-import type { ElementType, ReactNode } from "react";
+import type { ElementType, HTMLAttributes, ReactNode } from "react";
 import { cn } from "../../lib/cn";
 
-type CardProps = {
+type CardProps = HTMLAttributes<HTMLElement> & {
   variant?: "default" | "elevated" | "accent" | "ghost";
   padding?: "none" | "sm" | "md" | "lg";
   className?: string;
@@ -29,9 +29,10 @@ export default function Card({
   className,
   children,
   as: Tag = "div",
+  ...props
 }: CardProps) {
   return (
-    <Tag className={cn(variants[variant], paddings[padding], className)}>
+    <Tag className={cn(variants[variant], paddings[padding], className)} {...props}>
       {children}
     </Tag>
   );

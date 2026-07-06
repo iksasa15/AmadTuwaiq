@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { DemoModeProvider } from "./hooks/useDemoMode";
-import Sidebar, { TopNav, type TabId } from "./components/layout/Sidebar";
+import AppShell from "./components/layout/AppShell";
+import { type TabId } from "./components/layout/Sidebar";
 import MarketOverviewPage from "./components/dashboard/MarketOverview";
 import CompanyPage from "./components/company/CompanyPage";
 import AlertsPage from "./components/demo/AlertsPage";
@@ -20,27 +21,20 @@ export default function App() {
 
   return (
     <DemoModeProvider>
-      <div className="flex min-h-screen bg-bg dark:bg-[#0a1628]">
-        <Sidebar active={tab} onChange={setTab} />
-
-        <main className="min-w-0 flex-1">
-          <div className="mx-auto max-w-6xl px-5 py-6 lg:px-10 lg:py-8 xl:max-w-7xl">
-            {!selected && <TopNav active={tab} onChange={setTab} />}
-            {selected ? (
-              <CompanyPage ticker={selected} onBack={() => setSelected(null)} />
-            ) : (
-              <>
-                {tab === "market" && <MarketOverviewPage onSelect={openCompany} />}
-                {tab === "alerts" && <AlertsPage onSelect={openCompany} />}
-                {tab === "mobily" && <MobilyCasePage onSelectMobily={() => openCompany("7020.SR")} />}
-                {tab === "sectors" && <SectorsPage />}
-                {tab === "strategic" && <StrategicHub onSelectCompany={openCompany} />}
-                {tab === "about" && <AboutPage />}
-              </>
-            )}
-          </div>
-        </main>
-      </div>
+      <AppShell tab={tab} onTabChange={setTab} selected={selected}>
+        {selected ? (
+          <CompanyPage ticker={selected} onBack={() => setSelected(null)} />
+        ) : (
+          <>
+            {tab === "market" && <MarketOverviewPage onSelect={openCompany} />}
+            {tab === "alerts" && <AlertsPage onSelect={openCompany} />}
+            {tab === "mobily" && <MobilyCasePage onSelectMobily={() => openCompany("7020.SR")} />}
+            {tab === "sectors" && <SectorsPage />}
+            {tab === "strategic" && <StrategicHub onSelectCompany={openCompany} />}
+            {tab === "about" && <AboutPage />}
+          </>
+        )}
+      </AppShell>
     </DemoModeProvider>
   );
 }
