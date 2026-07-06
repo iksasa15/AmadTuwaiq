@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   Bar,
   BarChart,
@@ -10,6 +11,7 @@ import {
 } from "recharts";
 import { MOBILY_TIMELINE } from "../../api/dataSource";
 import Header from "../layout/Header";
+import InteractiveTimeline from "../strategic/InteractiveTimeline";
 import { RISK_COLOR } from "../../utils/risk";
 import { ArrowRight, ClipboardList, Megaphone } from "../ui/icons";
 
@@ -23,7 +25,14 @@ const chartData = MOBILY_TIMELINE.filter((y) => y.year <= 2013).map((y) => ({
   level: y.risk_level,
 }));
 
+const timelineSteps = MOBILY_TIMELINE.map((s) => ({
+  ...s,
+  is_alert: s.year === 2013,
+  is_crisis: s.year === 2014,
+}));
+
 export default function MobilyCasePage({ onSelectMobily }: Props) {
+  const [selectedYear, setSelectedYear] = useState(2013);
   return (
     <>
       <Header subtitle="دراسة حالة — Backtest" />
@@ -67,9 +76,18 @@ export default function MobilyCasePage({ onSelectMobily }: Props) {
         </ResponsiveContainer>
       </section>
 
+      <section className="mb-8 rounded-xl border border-line bg-white p-6 dark:border-bg/10 dark:bg-ink/30">
+        <h2 className="mb-4 font-black text-ink dark:text-bg">الخط الزمني التفاعلي</h2>
+        <InteractiveTimeline
+          steps={timelineSteps}
+          selectedYear={selectedYear}
+          onSelectYear={setSelectedYear}
+        />
+      </section>
+
       <section className="grid gap-4 lg:grid-cols-2">
         <div className="space-y-4">
-          <h2 className="font-black text-ink dark:text-bg">الخط الزمني</h2>
+          <h2 className="font-black text-ink dark:text-bg">تفاصيل السنوات</h2>
           {MOBILY_TIMELINE.map((step, i) => (
             <article
               key={step.year}

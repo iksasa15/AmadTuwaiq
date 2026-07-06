@@ -1,6 +1,7 @@
 import Header from "../layout/Header";
 import { DEMO_MARKET_STATS } from "../../data/demoExtras";
-import { Info, Layers, Settings } from "../ui/icons";
+import { STRATEGIC_SECTIONS } from "../../data/strategicDemo";
+import { Info, Layers, Radar, Settings } from "../ui/icons";
 
 export default function AboutPage() {
   return (
@@ -62,6 +63,27 @@ export default function AboutPage() {
                           │
                      FastAPI ──► React (RTL)`}
         </pre>
+      </section>
+
+      <section className="mb-8 rounded-xl border border-line bg-white p-6 dark:border-bg/10 dark:bg-ink/30">
+        <h2 className="mb-4 flex items-center gap-2 font-black text-ink dark:text-bg">
+          <Radar className="h-5 w-5 text-primary" strokeWidth={2} />
+          القدرات الاستراتيجية
+        </h2>
+        <p className="mb-4 text-sm text-ink-soft dark:text-bg/75">
+          ست قدرات لا توفرها أنظمة البنك التقليدية — متوفرة في تبويب «قدرات رقيب»:
+        </p>
+        <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
+          {STRATEGIC_SECTIONS.map((s) => (
+            <li
+              key={s.id}
+              className="rounded-lg bg-bg-deep/50 px-3 py-2 text-sm dark:bg-ink/40"
+            >
+              <strong>{s.label}</strong>
+              <span className="mr-2 text-[10px] text-accent">({s.badge})</span>
+            </li>
+          ))}
+        </ul>
       </section>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
