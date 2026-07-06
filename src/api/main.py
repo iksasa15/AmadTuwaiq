@@ -2,17 +2,24 @@
 
 from __future__ import annotations
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
 
+from src.api.portfolio import build_portfolio_report, parse_portfolio_file
 from src.api.schemas import (
     CompanyDetail,
     CompanySummary,
     FlagItem,
     MarketOverview,
+    PortfolioReport,
     RefreshResponse,
+    SimulationInput,
+    SimulationResult,
+    TimelineResponse,
 )
 from src.api.service import get_service
+from src.api.simulator import run_simulation
+from src.api.timeline import get_timeline
 
 app = FastAPI(
     title="رقيب API",

@@ -11,6 +11,7 @@ import pandas as pd
 
 from src.api.financials import build_financial_statements
 from src.models.data_quality import MESSAGES_AR, assess_company, is_bank_sector
+from src.models.prompts import generate_interrogation_prompt
 from src.models.scoring import RULE_DEFINITIONS, risk_level as compute_risk_level
 
 BENEISH_INDICATORS = ["DSRI", "GMI", "AQI", "SGI", "DEPI", "SGAI", "LVGI", "TATA"]
@@ -367,6 +368,7 @@ class DataService:
                     "severity": f["severity"],
                     "explanation_ar": f["explanation_ar"],
                     "evidence": evidence,
+                    "interrogation_prompt_ar": generate_interrogation_prompt(f["flag_id"], evidence),
                 }
             )
         return rows

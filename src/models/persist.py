@@ -43,6 +43,20 @@ CREATE TABLE IF NOT EXISTS flags (
 
 CREATE INDEX IF NOT EXISTS idx_scores_ticker ON scores(ticker);
 CREATE INDEX IF NOT EXISTS idx_flags_ticker ON flags(ticker, period);
+
+CREATE TABLE IF NOT EXISTS score_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ticker TEXT NOT NULL,
+    period TEXT NOT NULL,
+    risk_score REAL NOT NULL,
+    risk_level TEXT NOT NULL,
+    is_known_crisis_point INTEGER DEFAULT 0,
+    crisis_label_ar TEXT DEFAULT NULL,
+    computed_at TEXT NOT NULL,
+    UNIQUE(ticker, period)
+);
+
+CREATE INDEX IF NOT EXISTS idx_score_history_ticker ON score_history(ticker);
 """
 
 
@@ -113,12 +127,44 @@ def persist_scores(scores_df: pd.DataFrame, flags_records: list[dict]) -> None:
             )
         conn.commit()
 
+    sync_score_history(scores_df)
+
     logger.info(
         "Persisted %d scores, %d flags → %s",
         len(scores_df),
         len(flags_records),
         DB_PATH,
     )
+
+
+def sync_score_history(scores_df: pd.DataFrame) -> None:
+    """مزامنة جدول score_history من نتائج التسجيل."""
+    if scores_df.empty:
+        return
+    engine = get_engine()
+    now = datetime.now(timezone.utc).isoformat()
+    with engine.connect() as conn:
+        conn.execute(text("DELETE FROM score_history"))
+        for _, row in scores_df.iterrows():
+            period = f"{int(row['year'])}-Q4"
+            conn.execute(
+                text("""
+                    INSERT INTO score_history
+                    (ticker, period, risk_score, risk_level, is_known_crisis_point,
+                     crisis_label_ar, computed_at)
+                    VALUES (:ticker, :period, :risk_score, :risk_level, 0, NULL, :computed_at)
+                """),
+                {
+                    "ticker": row["ticker"],
+                    "period": period,
+                    "risk_score": float(row["risk_score"]),
+                    "risk_level": row["risk_level"],
+                    "computed_at": now,
+                },
+            )
+        conn.commit()
+
+    logger.info("Synced score_history (%d rows)", len(scores_df))
 
 
 def load_latest_scores() -> pd.DataFrame:

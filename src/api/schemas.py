@@ -114,6 +114,64 @@ class FlagItem(BaseModel):
     severity: Severity
     explanation_ar: str
     evidence: dict[str, Any]
+    interrogation_prompt_ar: str | None = None
+
+
+class SimulationInput(BaseModel):
+    ticker: str
+    revenue_delta_pct: float = 0.0
+    receivables_delta_pct: float = 0.0
+    cogs_delta_pct: float = 0.0
+    cfo_delta_pct: float = 0.0
+    depreciation_delta_pct: float = 0.0
+
+
+class SimulationResult(BaseModel):
+    ticker: str
+    original_score: float
+    simulated_score: float
+    score_delta: float
+    original_level: str
+    simulated_level: str
+    triggered_flags: list[str]
+    removed_flags: list[str] = Field(default_factory=list)
+
+
+class TimelinePoint(BaseModel):
+    period: str
+    year: int
+    risk_score: float
+    risk_level: RiskLevel
+    is_known_crisis_point: bool = False
+    crisis_label_ar: str | None = None
+    is_first_high_risk: bool = False
+
+
+class TimelineResponse(BaseModel):
+    ticker: str
+    has_known_case: bool
+    months_before_official: int | None = None
+    source_note: str | None = None
+    points: list[TimelinePoint] = Field(default_factory=list)
+
+
+class PortfolioRow(BaseModel):
+    ticker: str
+    name_ar: str
+    risk_score: float
+    risk_level: RiskLevel
+    top_flag_ar: str | None = None
+
+
+class PortfolioReport(BaseModel):
+    total_companies: int
+    matched_companies: int
+    unmatched_tickers: list[str]
+    safe_count: int
+    watch_count: int
+    danger_count: int
+    portfolio_safety_pct: float
+    rows: list[PortfolioRow]
 
 
 class TopRiskItem(BaseModel):
