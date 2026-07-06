@@ -63,7 +63,7 @@ const DEMO_RAW: Record<string, RawYear[]> = {
   ],
 };
 
-function genericRaw(ticker: string, baseYear = 2025): RawYear[] {
+function genericRaw(ticker: string): RawYear[] {
   const seed = ticker.charCodeAt(0) + ticker.charCodeAt(1);
   const scale = 3_000_000_000 + (seed % 20) * 500_000_000;
   return [2022, 2023, 2024, 2025].map((year, i) => {

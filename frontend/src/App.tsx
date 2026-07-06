@@ -24,11 +24,11 @@ export default function App() {
 
         <main className="min-w-0 flex-1">
           <div className="mx-auto max-w-6xl px-5 py-6 lg:px-10 lg:py-8 xl:max-w-7xl">
+            {!selected && <TopNav active={tab} onChange={setTab} />}
             {selected ? (
               <CompanyPage ticker={selected} onBack={() => setSelected(null)} />
             ) : (
               <>
-                <TopNav active={tab} onChange={setTab} />
                 {tab === "market" && <MarketOverviewPage onSelect={openCompany} />}
                 {tab === "alerts" && <AlertsPage onSelect={openCompany} />}
                 {tab === "mobily" && <MobilyCasePage onSelectMobily={() => openCompany("7020.SR")} />}

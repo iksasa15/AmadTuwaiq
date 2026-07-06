@@ -28,6 +28,7 @@ import {
   RefreshCw,
   Settings,
   Sun,
+  Table2,
   Wallet,
 } from "lucide-react";
 
@@ -62,6 +63,7 @@ export {
   RefreshCw,
   Settings,
   Sun,
+  Table2,
   Wallet,
 };
 
