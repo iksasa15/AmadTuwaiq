@@ -12,15 +12,11 @@ import {
 
 export type { DemoAlert } from "../data/demo";
 export { DEMO_ALERTS, MOBILY_TIMELINE };
-export { DEMO_ACTIVITY, DEMO_MARKET_STATS, DEMO_SECTOR_META, SECTOR_AR } from "../data/demoExtras";
+export { DEMO_MARKET_STATS, DEMO_SECTOR_META, SECTOR_AR } from "../data/demoExtras";
 export {
-  DEMO_SENTIMENT_CASES,
-  DEMO_NETWORK,
-  DEMO_WHATIF_BASE,
   DEMO_AUDITOR_PROMPTS,
   DEMO_ALINMA_PORTFOLIO,
   ALMAJIL_TIMELINE,
-  STRATEGIC_SECTIONS,
 } from "../data/strategicDemo";
 
 export function createDataSource(demoMode: boolean) {

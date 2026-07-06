@@ -2,7 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { createDataSource } from "../../api/dataSource";
 import { useDemoMode } from "../../hooks/useDemoMode";
 import type { CompanySummary, MarketOverview } from "../../api/client";
-import { DEMO_ACTIVITY, SECTOR_AR } from "../../data/demoExtras";
+import { SECTOR_AR } from "../../data/demoExtras";
 import { getPageMeta } from "../../config/navigation";
 import type { TabId } from "../../config/navigation";
 import ErrorBanner from "../ui/ErrorBanner";
@@ -14,7 +14,6 @@ import DemoBanner from "../layout/DemoBanner";
 import RiskDonut from "./RiskDonut";
 import CompanyTable from "./CompanyTable";
 import RefreshDemoButton from "../demo/RefreshDemoButton";
-import ActivityFeed from "./ActivityFeed";
 import QuickStartCards from "./QuickStartCards";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
@@ -132,8 +131,6 @@ export default function MarketOverviewPage({ onSelect, onNavigate }: Props) {
           ))}
         </section>
       )}
-
-      {demoMode && <ActivityFeed items={DEMO_ACTIVITY} onSelect={onSelect} className="mb-6" />}
 
       <div ref={tableRef} className="mb-4 flex flex-wrap gap-2">
         <Button
