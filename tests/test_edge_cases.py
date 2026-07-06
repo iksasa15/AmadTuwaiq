@@ -5,10 +5,8 @@ import pandas as pd
 import pytest
 
 from src.models.data_quality import (
-    MESSAGES_AR,
     assess_company,
     confidence_from_row,
-    impute_row_for_scoring,
     is_bank_sector,
 )
 from src.models.scoring import compute_risk_score
