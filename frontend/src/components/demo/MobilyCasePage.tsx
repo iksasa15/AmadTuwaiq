@@ -20,6 +20,7 @@ import Button from "../ui/Button";
 import Disclaimer from "../ui/Disclaimer";
 
 type Props = {
+  onBack: () => void;
   onSelectMobily: () => void;
 };
 
@@ -35,11 +36,20 @@ const timelineSteps = MOBILY_TIMELINE.map((s) => ({
   is_crisis: s.year === 2014,
 }));
 
-export default function MobilyCasePage({ onSelectMobily }: Props) {
+export default function MobilyCasePage({ onBack, onSelectMobily }: Props) {
   const [selectedYear, setSelectedYear] = useState(2013);
   return (
     <>
-      <PageHeader title="دراسة حالة — Backtest" description="موبايلي 2014 — اختبار رجعي" />
+      <PageHeader
+        title="دراسة حالة — Backtest"
+        description="موبايلي 2014 — اختبار رجعي"
+        breadcrumb={
+          <Button variant="ghost" size="sm" onClick={onBack} className="px-0 text-primary">
+            <ArrowRight className="h-4 w-4" strokeWidth={2} />
+            العودة للسوق
+          </Button>
+        }
+      />
 
       <Card
         variant="accent"

@@ -10,7 +10,6 @@ export type { TabId };
 export const TABS = [
   { id: "market" as const, label: "السوق", icon: TAB_ICONS.market },
   { id: "alerts" as const, label: "الإشارات", icon: TAB_ICONS.alerts },
-  { id: "mobily" as const, label: "موبايلي 2014", icon: TAB_ICONS.mobily },
   { id: "sectors" as const, label: "القطاعات", icon: TAB_ICONS.sectors },
   { id: "strategic" as const, label: "قدرات رقيب", icon: TAB_ICONS.strategic },
   { id: "about" as const, label: "عن رقيب", icon: TAB_ICONS.about },

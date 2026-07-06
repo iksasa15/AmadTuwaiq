@@ -44,7 +44,7 @@ import {
   Wallet,
 } from "lucide-react";
 
-export type TabId = "market" | "alerts" | "mobily" | "sectors" | "strategic" | "about";
+export type TabId = "market" | "alerts" | "sectors" | "strategic" | "about";
 
 export {
   Activity,
@@ -94,7 +94,6 @@ export {
 export const TAB_ICONS: Record<TabId, LucideIcon> = {
   market: LayoutDashboard,
   alerts: Flag,
-  mobily: ClipboardList,
   sectors: Building2,
   strategic: Radar,
   about: Info,
