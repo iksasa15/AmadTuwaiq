@@ -45,6 +45,21 @@ export default function CompanyPage({ ticker, onBack }: Props) {
     return <EmptyState title="الشركة غير موجودة" />;
   }
 
+  if (!company.scoring_eligible && company.message_ar) {
+    return (
+      <div className="space-y-6">
+        <button type="button" onClick={onBack} className="text-sm font-semibold text-primary">← العودة</button>
+        <header className="rounded-2xl border border-line bg-white p-8 text-center dark:border-bg/10 dark:bg-ink/30">
+          <h1 className="text-3xl font-black text-ink dark:text-bg">{company.name_ar}</h1>
+          <p className="mt-2 text-ink-soft">{company.ticker} · {company.sector}</p>
+          <p className="mx-auto mt-6 max-w-lg rounded-xl bg-accent/10 p-4 text-sm font-semibold text-accent">
+            {company.message_ar}
+          </p>
+        </header>
+      </div>
+    );
+  }
+
   const m = company.key_metrics;
 
   return (
@@ -67,6 +82,11 @@ export default function CompanyPage({ ticker, onBack }: Props) {
             <p className="mt-3 text-sm text-ink-soft">
               M-Score: <strong className="text-ink dark:text-bg">{company.m_score.toFixed(2)}</strong>
               {" · "}{company.latest_year}
+            </p>
+          )}
+          {company.confidence === "low" && (
+            <p className="mt-2 inline-block rounded-lg bg-accent/15 px-3 py-1 text-xs font-bold text-accent">
+              ثقة منخفضة — {company.confidence_pct != null ? `${Math.round(company.confidence_pct)}%` : ""}
             </p>
           )}
           {company.shap_top1 && (

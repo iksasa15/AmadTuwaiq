@@ -56,18 +56,22 @@ export default function CompanyTable({ companies, onSelect, sortDesc, onToggleSo
                 </td>
                 <td className="px-4 py-3 text-ink-soft dark:text-bg/70">{c.sector}</td>
                 <td className="px-4 py-3">
-                  <div className="flex items-center gap-3">
-                    <div className="h-2 w-28 overflow-hidden rounded-full bg-bg-deep dark:bg-ink/60">
-                      <div
-                        className="h-full rounded-full transition-all"
-                        style={{ width: `${c.risk_score}%`, background: RISK_COLOR[c.risk_level] }}
-                      />
+                  {c.risk_score != null && c.risk_level ? (
+                    <div className="flex items-center gap-3">
+                      <div className="h-2 w-28 overflow-hidden rounded-full bg-bg-deep dark:bg-ink/60">
+                        <div
+                          className="h-full rounded-full transition-all"
+                          style={{ width: `${c.risk_score}%`, background: RISK_COLOR[c.risk_level] }}
+                        />
+                      </div>
+                      <span className="w-8 font-bold" style={{ color: RISK_COLOR[c.risk_level] }}>
+                        {c.risk_score}
+                      </span>
+                      <span className="text-xs text-ink-faint">{RISK_LABEL[c.risk_level]}</span>
                     </div>
-                    <span className="w-8 font-bold" style={{ color: RISK_COLOR[c.risk_level] }}>
-                      {c.risk_score}
-                    </span>
-                    <span className="text-xs text-ink-faint">{RISK_LABEL[c.risk_level]}</span>
-                  </div>
+                  ) : (
+                    <span className="text-xs text-ink-faint">—</span>
+                  )}
                 </td>
                 <td className="px-4 py-3 text-lg">
                   <TrendIcon trend={c.trend} />
@@ -93,9 +97,13 @@ export default function CompanyTable({ companies, onSelect, sortDesc, onToggleSo
             </div>
             <div className="flex items-center gap-2">
               <TrendIcon trend={c.trend} />
-              <span className="text-xl font-black" style={{ color: RISK_COLOR[c.risk_level] }}>
-                {c.risk_score}
-              </span>
+              {c.risk_score != null && c.risk_level ? (
+                <span className="text-xl font-black" style={{ color: RISK_COLOR[c.risk_level] }}>
+                  {c.risk_score}
+                </span>
+              ) : (
+                <span className="text-sm text-ink-faint">—</span>
+              )}
             </div>
           </button>
         ))}

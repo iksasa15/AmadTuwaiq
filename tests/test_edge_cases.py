@@ -45,10 +45,10 @@ def test_nan_indicators_low_confidence_still_scores():
             "year": 2024,
             "DSRI": np.nan,
             "GMI": np.nan,
-            "AQI": 1.0,
+            "AQI": np.nan,
             "SGI": 1.05,
-            "DEPI": 1.0,
-            "SGAI": 1.0,
+            "DEPI": np.nan,
+            "SGAI": np.nan,
             "LVGI": 1.0,
             "TATA": 0.03,
             "m_score": -2.0,
@@ -72,8 +72,7 @@ def test_nan_indicators_low_confidence_still_scores():
     assert pct < 65
 
     hist = pd.DataFrame([row])
-    imputed = impute_row_for_scoring(row)
-    result = compute_risk_score(imputed, hist, hist)
+    result = compute_risk_score(row, hist, hist)
     assert 0 <= result["risk_score"] <= 100
     assert result["confidence"] == "low"
 

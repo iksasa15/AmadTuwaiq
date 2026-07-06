@@ -1,6 +1,19 @@
 import { RISK_COLOR, RISK_LABEL, type RiskLevel } from "../../utils/risk";
 
-export default function ScoreRing({ score, level }: { score: number; level: RiskLevel }) {
+export default function ScoreRing({
+  score,
+  level,
+}: {
+  score: number | null;
+  level: RiskLevel | null;
+}) {
+  if (score == null || level == null) {
+    return (
+      <div className="flex h-40 w-40 shrink-0 items-center justify-center rounded-full border-2 border-dashed border-line dark:border-bg/30">
+        <p className="px-4 text-center text-sm font-semibold text-ink-faint">غير محسوبة</p>
+      </div>
+    );
+  }
   const color = RISK_COLOR[level];
   const circumference = 2 * Math.PI * 54;
   const offset = circumference - (score / 100) * circumference;
