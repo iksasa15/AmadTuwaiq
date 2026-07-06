@@ -4,15 +4,9 @@ import AppShell from "./components/layout/AppShell";
 import { type TabId } from "./components/layout/Sidebar";
 import MarketOverviewPage from "./components/dashboard/MarketOverview";
 import CompanyPage from "./components/company/CompanyPage";
-import AlertsPage from "./components/demo/AlertsPage";
 import MobilyCasePage from "./components/demo/MobilyCasePage";
-import SectorsPage from "./components/demo/SectorsPage";
-import AboutPage from "./components/demo/AboutPage";
 import PortfolioPage from "./components/demo/PortfolioPage";
-import PromptsPage from "./components/demo/PromptsPage";
 import BacktestPage from "./components/demo/BacktestPage";
-import FutureCapabilitiesPage from "./components/demo/FutureCapabilitiesPage";
-import GuidePage from "./components/demo/GuidePage";
 import { isMobilyTicker, MOBILY_TICKER } from "./utils/mobily";
 
 export default function App() {
@@ -62,14 +56,8 @@ export default function App() {
             {tab === "home" && (
               <MarketOverviewPage onSelect={openCompany} onNavigate={setTab} />
             )}
-            {tab === "alerts" && <AlertsPage onSelect={openCompany} />}
-            {tab === "sectors" && <SectorsPage />}
             {tab === "portfolio" && <PortfolioPage onSelect={openCompany} />}
-            {tab === "prompts" && <PromptsPage />}
             {tab === "backtest" && <BacktestPage onSelectMobily={openMobilyCase} />}
-            {tab === "future" && <FutureCapabilitiesPage onSelect={openCompany} />}
-            {tab === "guide" && <GuidePage onNavigate={setTab} />}
-            {tab === "about" && <AboutPage onNavigate={setTab} />}
           </>
         )}
       </AppShell>
