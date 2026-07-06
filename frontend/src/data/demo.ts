@@ -1,8 +1,10 @@
 import type {
   CompanyDetail,
+  CompanyProfile,
   CompanySummary,
   FlagItem,
   MarketOverview,
+  ScoreBreakdown,
 } from "../api/client";
 import { getDemoFinancials } from "./demoFinancials";
 
