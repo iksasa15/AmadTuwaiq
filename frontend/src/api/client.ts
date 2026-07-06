@@ -20,6 +20,22 @@ export type CompanySummary = {
 
 export type IndicatorSet = Partial<Record<string, number | null>>;
 
+export type ScoreBreakdown = {
+  m_score_norm: number;
+  anomaly_score: number;
+  xgb_score: number;
+  rule_flags_score: number;
+};
+
+export type CompanyProfile = {
+  summary_ar: string;
+  market_cap_ar: string;
+  employees: string;
+  exchange: string;
+  data_source: string;
+  last_scan: string;
+};
+
 export type CompanyDetail = CompanySummary & {
   m_score: number | null;
   latest_year: number | null;
@@ -38,6 +54,9 @@ export type CompanyDetail = CompanySummary & {
   confidence_pct?: number | null;
   scoring_eligible?: boolean;
   financial_statements?: FinancialStatementsData | null;
+  score_breakdown?: ScoreBreakdown | null;
+  profile?: CompanyProfile | null;
+  analyst_note_ar?: string | null;
 };
 
 export type FlagItem = {

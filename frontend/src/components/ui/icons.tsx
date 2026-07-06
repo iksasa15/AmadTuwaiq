@@ -29,6 +29,7 @@ import {
   Settings,
   Sun,
   Table2,
+  Users,
   Wallet,
 } from "lucide-react";
 
@@ -64,6 +65,7 @@ export {
   Settings,
   Sun,
   Table2,
+  Users,
   Wallet,
 };
 
