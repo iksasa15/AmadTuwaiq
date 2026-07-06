@@ -13,8 +13,24 @@
   --color-ink-faint: rgba(12, 35, 65, 0.65);
   --color-line: rgba(12, 35, 65, 0.12);
   --color-status-green: #22c55e;
+  --color-surface: #ffffff;
+  --color-surface-elevated: #ffffff;
 
   --font-sans: "IBM Plex Sans Arabic", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+
+  --radius-card: 0.75rem;
+  --radius-control: 0.5rem;
+  --shadow-card: 0 1px 3px 0 rgba(12, 35, 65, 0.08), 0 1px 2px -1px rgba(12, 35, 65, 0.06);
+}
+
+:root {
+  --space-page: 1.5rem;
+  --space-section: 1.25rem;
+}
+
+.dark {
+  --color-surface: #0a1628;
+  --color-surface-elevated: #0d1a2d;
 }
 
 *, *::before, *::after {
@@ -36,11 +52,45 @@ body {
 
 .dark body,
 html.dark body {
-  background: #0a1628;
-  color: #F2EFE9;
+  background: var(--color-surface);
+  color: var(--color-bg);
 }
 
 ::selection {
   background: var(--color-primary);
   color: white;
+}
+
+@layer components {
+  .card {
+    @apply rounded-[var(--radius-card)] border border-line bg-surface dark:border-bg/10;
+  }
+
+  .card-elevated {
+    @apply rounded-[var(--radius-card)] border border-line bg-surface shadow-[var(--shadow-card)] dark:border-bg/10;
+  }
+
+  .card-padding {
+    @apply p-5;
+  }
+
+  .page-title {
+    @apply text-2xl font-black text-ink dark:text-bg lg:text-3xl;
+  }
+
+  .section-title {
+    @apply text-lg font-bold text-ink dark:text-bg;
+  }
+
+  .label-caps {
+    @apply text-[10px] font-semibold uppercase tracking-wide text-ink-faint;
+  }
+
+  .table-head {
+    @apply bg-bg-deep/40 text-ink-faint dark:bg-ink/40;
+  }
+
+  .table-row-hover {
+    @apply transition hover:bg-bg-deep/20 dark:hover:bg-ink/30;
+  }
 }
