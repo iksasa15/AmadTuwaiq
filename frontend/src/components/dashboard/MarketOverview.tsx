@@ -1,15 +1,22 @@
 import { useEffect, useMemo, useState } from "react";
-import { api, type CompanySummary, type MarketOverview } from "../../api/client";
+import { createDataSource } from "../../api/dataSource";
+import { useDemoMode } from "../../hooks/useDemoMode";
+import type { CompanySummary, MarketOverview } from "../../api/client";
 import ErrorBanner from "../ui/ErrorBanner";
 import EmptyState from "../ui/EmptyState";
 import { HeroSkeleton, TableSkeleton } from "../ui/Skeleton";
 import Header from "../layout/Header";
+import DemoBanner from "../layout/DemoBanner";
 import RiskDonut from "./RiskDonut";
 import CompanyTable from "./CompanyTable";
+import RefreshDemoButton from "../demo/RefreshDemoButton";
 
 type Props = { onSelect: (ticker: string) => void };
 
 export default function MarketOverviewPage({ onSelect }: Props) {
+  const { demoMode } = useDemoMode();
+  const ds = useMemo(() => createDataSource(demoMode), [demoMode]);
+
   const [companies, setCompanies] = useState<CompanySummary[]>([]);
   const [overview, setOverview] = useState<MarketOverview | null>(null);
   const [sector, setSector] = useState("");
@@ -20,7 +27,7 @@ export default function MarketOverviewPage({ onSelect }: Props) {
   const load = () => {
     setLoading(true);
     setError("");
-    Promise.all([api.companies(), api.overview()])
+    Promise.all([ds.companies(), ds.overview()])
       .then(([c, o]) => {
         setCompanies(c);
         setOverview(o);
@@ -29,7 +36,7 @@ export default function MarketOverviewPage({ onSelect }: Props) {
       .finally(() => setLoading(false));
   };
 
-  useEffect(load, []);
+  useEffect(load, [demoMode]);
 
   const sectors = useMemo(() => [...new Set(companies.map((c) => c.sector))].sort(), [companies]);
 
@@ -59,6 +66,7 @@ export default function MarketOverviewPage({ onSelect }: Props) {
     return (
       <>
         <Header />
+        <DemoBanner />
         <ErrorBanner message={error} onRetry={load} />
       </>
     );
@@ -67,9 +75,10 @@ export default function MarketOverviewPage({ onSelect }: Props) {
   return (
     <>
       <Header subtitle="منصة رقابة مالية استباقية" />
+      <DemoBanner />
 
       {/* Hero */}
-      <section className="mb-8 grid gap-6 rounded-2xl border border-line bg-white p-6 shadow-sm dark:border-bg/10 dark:bg-ink/30 md:grid-cols-2">
+      <section className="mb-6 grid gap-6 rounded-2xl border border-line bg-white p-6 shadow-sm dark:border-bg/10 dark:bg-ink/30 md:grid-cols-2">
         <div className="flex flex-col justify-center">
           <p className="text-sm font-semibold text-primary">تحت المراقبة الآن</p>
           <p className="mt-2 text-5xl font-black text-ink dark:text-bg">
@@ -80,9 +89,29 @@ export default function MarketOverviewPage({ onSelect }: Props) {
             متوسط درجة المخاطر:{" "}
             <strong>{overview?.avg_risk_score ?? "—"}</strong>
           </p>
+          <div className="mt-4">
+            <RefreshDemoButton onRefreshed={load} />
+          </div>
         </div>
         {overview && <RiskDonut overview={overview} />}
       </section>
+
+      {/* Top risks strip */}
+      {overview && overview.top_risks.length > 0 && (
+        <section className="mb-6 flex gap-3 overflow-x-auto pb-2">
+          {overview.top_risks.slice(0, 5).map((r) => (
+            <button
+              key={r.ticker}
+              type="button"
+              onClick={() => onSelect(r.ticker)}
+              className="shrink-0 rounded-xl border border-accent/30 bg-accent/10 px-4 py-3 text-right transition hover:border-accent dark:bg-accent/15"
+            >
+              <p className="text-xs text-ink-faint">{r.name_ar}</p>
+              <p className="text-2xl font-black text-accent">{r.risk_score}</p>
+            </button>
+          ))}
+        </section>
+      )}
 
       {/* Sector filter */}
       <div className="mb-4 flex flex-wrap gap-2">

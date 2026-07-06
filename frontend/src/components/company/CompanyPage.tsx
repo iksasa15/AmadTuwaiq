@@ -1,5 +1,7 @@
-import { useEffect, useState } from "react";
-import { api, type CompanyDetail, type FlagItem } from "../../api/client";
+import { useEffect, useMemo, useState } from "react";
+import { createDataSource } from "../../api/dataSource";
+import { useDemoMode } from "../../hooks/useDemoMode";
+import type { CompanyDetail, FlagItem } from "../../api/client";
 import ErrorBanner from "../ui/ErrorBanner";
 import EmptyState from "../ui/EmptyState";
 import { CompanyPageSkeleton } from "../ui/Skeleton";
@@ -11,6 +13,9 @@ import IndicatorsRadar from "./IndicatorsRadar";
 type Props = { ticker: string; onBack: () => void };
 
 export default function CompanyPage({ ticker, onBack }: Props) {
+  const { demoMode } = useDemoMode();
+  const ds = useMemo(() => createDataSource(demoMode), [demoMode]);
+
   const [company, setCompany] = useState<CompanyDetail | null>(null);
   const [flags, setFlags] = useState<FlagItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -19,8 +24,9 @@ export default function CompanyPage({ ticker, onBack }: Props) {
   const load = () => {
     setLoading(true);
     setError("");
-    Promise.all([api.company(ticker), api.flags(ticker)])
+    Promise.all([ds.company(ticker), ds.flags(ticker)])
       .then(([c, f]) => {
+        if (!c) throw new Error("Company not found");
         setCompany(c);
         setFlags(f);
       })
@@ -28,7 +34,7 @@ export default function CompanyPage({ ticker, onBack }: Props) {
       .finally(() => setLoading(false));
   };
 
-  useEffect(load, [ticker]);
+  useEffect(load, [ticker, demoMode]);
 
   if (loading) return <CompanyPageSkeleton />;
 
@@ -69,10 +75,9 @@ export default function CompanyPage({ ticker, onBack }: Props) {
         onClick={onBack}
         className="text-sm font-semibold text-primary hover:underline"
       >
-        ← العودة للسوق
+        ← العودة
       </button>
 
-      {/* Header + Score Ring */}
       <header className="flex flex-col items-center gap-6 rounded-2xl border border-line bg-white p-6 shadow-sm dark:border-bg/10 dark:bg-ink/30 md:flex-row md:items-start md:justify-between">
         <div className="text-center md:text-right">
           <p className="text-sm text-ink-faint">{company.ticker} · {company.sector}</p>
@@ -89,6 +94,11 @@ export default function CompanyPage({ ticker, onBack }: Props) {
               ثقة منخفضة — {company.confidence_pct != null ? `${Math.round(company.confidence_pct)}%` : ""}
             </p>
           )}
+          {demoMode && ticker === "7020.SR" && (
+            <p className="mt-2 inline-block rounded-lg bg-secondary/15 px-3 py-1 text-xs font-bold text-secondary">
+              📋 Backtest 2013 — دراسة حالة موبايلي
+            </p>
+          )}
           {company.shap_top1 && (
             <p className="mt-3 max-w-lg rounded-xl bg-bg-deep/60 p-3 text-xs text-ink-soft dark:bg-ink/50 dark:text-bg/70">
               {company.shap_top1}
@@ -98,7 +108,6 @@ export default function CompanyPage({ ticker, onBack }: Props) {
         <ScoreRing score={company.risk_score} level={company.risk_level} />
       </header>
 
-      {/* Metrics grid */}
       <div className="grid grid-cols-2 gap-3 lg:grid-cols-4">
         {[
           ["CFO / الربح", m.cfo_to_net_income?.toFixed(2) ?? "—"],
@@ -113,13 +122,11 @@ export default function CompanyPage({ ticker, onBack }: Props) {
         ))}
       </div>
 
-      {/* Charts */}
       <div className="grid gap-6 lg:grid-cols-2">
         <ScoreHistoryChart history={company.score_history} />
         <IndicatorsRadar indicators={company.indicators} sectorAvg={company.sector_avg_indicators} />
       </div>
 
-      {/* Red flags — star of the demo */}
       <section>
         <h2 className="mb-4 flex items-center gap-2 text-xl font-black text-ink dark:text-bg">
           <span>🚩</span> الإشارات الحمراء
