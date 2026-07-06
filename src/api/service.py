@@ -81,6 +81,10 @@ class DataService:
             self.features = pd.DataFrame()
 
         self.companies = pd.read_csv(COMPANIES_FILE) if COMPANIES_FILE.exists() else pd.DataFrame()
+        if FINANCIALS_FILE.exists():
+            self.financials = pd.read_parquet(FINANCIALS_FILE)
+        else:
+            self.financials = pd.DataFrame()
         self.flags = self._load_flags()
         self.updated_at = datetime.now(timezone.utc).isoformat()
 
