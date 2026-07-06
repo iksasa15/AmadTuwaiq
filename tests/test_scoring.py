@@ -7,8 +7,9 @@ from src.models.scoring import LEVEL_HIGH, LEVEL_LOW, compute_risk_score, evalua
 
 def test_risk_level_buckets():
     assert risk_level(20) == LEVEL_LOW
-    assert risk_level(55) == "medium"
-    assert risk_level(80) == LEVEL_HIGH
+    assert risk_level(40) == "medium"
+    assert risk_level(60) == "high"
+    assert risk_level(80) == "critical"
 
 
 def test_rule_flag_depi():

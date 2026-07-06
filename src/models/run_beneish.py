@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 
 from src.models.persist import persist_scores
-from src.models.scoring import LEVEL_HIGH, LEVEL_LOW, LEVEL_MEDIUM, compute_risk_score
+from src.models.scoring import LEVEL_CRITICAL, LEVEL_HIGH, LEVEL_LOW, LEVEL_MEDIUM, compute_risk_score
 
 ROOT = Path(__file__).resolve().parents[2]
 FEATURES_FILE = ROOT / "data" / "processed" / "features.parquet"
@@ -108,9 +108,10 @@ def print_distribution(latest: pd.DataFrame) -> None:
     print("توزيع درجات المخاطر (أحدث سنة لكل شركة)")
     print("=" * 60)
     for level, label in [
-        (LEVEL_LOW, "منخفض (0–39)"),
-        (LEVEL_MEDIUM, "متوسط (40–69)"),
-        (LEVEL_HIGH, "مرتفع (70–100)"),
+        (LEVEL_LOW, "منخفض (0–25)"),
+        (LEVEL_MEDIUM, "متوسط (26–50)"),
+        (LEVEL_HIGH, "مرتفع (51–75)"),
+        (LEVEL_CRITICAL, "حرج (76–100)"),
     ]:
         count = dist.get(level, 0)
         print(f"  {label}: {count} ({count/total*100:.0f}%)")

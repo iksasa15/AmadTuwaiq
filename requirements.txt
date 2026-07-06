@@ -54,3 +54,4 @@ uvicorn==0.50.0
 websockets==16.0
 xgboost==3.2.0
 yfinance==1.5.1
+httpx==0.28.1

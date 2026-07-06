@@ -26,6 +26,14 @@ def _int_score(score: float) -> int:
     return int(round(score))
 
 
+def normalize_ticker(ticker: str) -> str:
+    t = ticker.strip()
+    if "." in t:
+        base, suffix = t.rsplit(".", 1)
+        return f"{base}.{suffix.upper()}"
+    return f"{t}.SR"
+
+
 class DataService:
     def __init__(self) -> None:
         self.reload()
@@ -93,9 +101,7 @@ class DataService:
         return rows
 
     def get_company(self, ticker: str) -> dict | None:
-        ticker = ticker.upper() if not ticker.endswith(".SR") else ticker
-        if not ticker.endswith(".SR") and "." not in ticker:
-            ticker = f"{ticker}.SR"
+        ticker = normalize_ticker(ticker)
 
         company_scores = self.scores[self.scores["ticker"] == ticker]
         if company_scores.empty:
@@ -164,8 +170,7 @@ class DataService:
         if self.flags.empty:
             return []
 
-        if not ticker.endswith(".SR"):
-            ticker = f"{ticker}.SR" if "." not in ticker else ticker
+        ticker = normalize_ticker(ticker)
 
         df = self.flags[self.flags["ticker"] == ticker]
         if period is not None:
