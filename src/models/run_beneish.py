@@ -7,11 +7,13 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.models.data_quality import assess_company, is_bank_sector
 from src.models.persist import persist_scores
 from src.models.scoring import LEVEL_CRITICAL, LEVEL_HIGH, LEVEL_LOW, LEVEL_MEDIUM, compute_risk_score
 
 ROOT = Path(__file__).resolve().parents[2]
 FEATURES_FILE = ROOT / "data" / "processed" / "features.parquet"
+FINANCIALS_FILE = ROOT / "data" / "processed" / "financials.parquet"
 ML_SCORES_FILE = ROOT / "data" / "processed" / "ml_scores.parquet"
 SCORES_OUT = ROOT / "data" / "processed" / "scores.parquet"
 
@@ -42,13 +44,26 @@ def score_all_features(features: pd.DataFrame | None = None) -> pd.DataFrame:
             }
         logger.info("Using ML scores from %s", ML_SCORES_FILE)
 
+    financials = pd.read_parquet(FINANCIALS_FILE) if FINANCIALS_FILE.exists() else pd.DataFrame()
+
     scored_rows: list[dict] = []
     flags_records: list[dict] = []
+    skipped_banks = 0
 
     for ticker, company_df in features.groupby("ticker"):
-        company_df = company_df.sort_values("year")
         sector = company_df.iloc[0]["sector"]
+        if is_bank_sector(sector):
+            skipped_banks += 1
+            logger.info("Skipping bank (Beneish N/A): %s", ticker)
+            continue
+
+        company_df = company_df.sort_values("year")
         sector_df = features[features["sector"] == sector]
+        fin_group = financials[financials["ticker"] == ticker] if not financials.empty else pd.DataFrame()
+        assessment = assess_company(ticker, sector, fin_group if not fin_group.empty else None)
+        if not assessment["scoring_eligible"]:
+            logger.info("Skipping %s: %s", ticker, assessment["data_status"])
+            continue
 
         for _, row in company_df.iterrows():
             key = (ticker, int(row["year"]))
@@ -68,7 +83,9 @@ def score_all_features(features: pd.DataFrame | None = None) -> pd.DataFrame:
                 "year": int(row["year"]),
                 "m_score": row.get("m_score"),
                 "shap_top1": ml.get("shap_top1", ""),
-                **{k: v for k, v in result.items() if k != "flags"},
+                "confidence": result.get("confidence"),
+                "confidence_pct": result.get("confidence_pct"),
+                **{k: v for k, v in result.items() if k not in ("flags", "confidence", "confidence_pct")},
             }
             scored_rows.append(scored)
 
@@ -83,6 +100,9 @@ def score_all_features(features: pd.DataFrame | None = None) -> pd.DataFrame:
                         "evidence": flag.evidence,
                     }
                 )
+
+    if skipped_banks:
+        logger.info("Excluded %d bank(s) from scoring", skipped_banks)
 
     scores_df = pd.DataFrame(scored_rows)
     latest = scores_df.sort_values("year").groupby("ticker").tail(1).reset_index(drop=True)

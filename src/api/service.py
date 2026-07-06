@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.models.data_quality import MESSAGES_AR, assess_company, is_bank_sector
 from src.models.scoring import RULE_DEFINITIONS, risk_level as compute_risk_level
 
 BENEISH_INDICATORS = ["DSRI", "GMI", "AQI", "SGI", "DEPI", "SGAI", "LVGI", "TATA"]
@@ -18,6 +19,7 @@ SCORES_FILE = ROOT / "data" / "processed" / "scores.parquet"
 FEATURES_FILE = ROOT / "data" / "processed" / "features.parquet"
 COMPANIES_FILE = ROOT / "data" / "companies.csv"
 DB_PATH = ROOT / "data" / "raqeeb.db"
+FINANCIALS_FILE = ROOT / "data" / "processed" / "financials.parquet"
 
 
 def _to_contract_level(score: float) -> str:

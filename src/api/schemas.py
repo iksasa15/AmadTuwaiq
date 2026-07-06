@@ -8,6 +8,8 @@ from pydantic import BaseModel, Field
 
 RiskLevel = Literal["low", "medium", "high", "critical"]
 Severity = Literal["info", "warning", "critical"]
+DataStatus = Literal["ok", "insufficient", "bank_excluded", "partial"]
+ConfidenceLevel = Literal["high", "medium", "low"]
 
 
 BENEISH_INDICATORS = ["DSRI", "GMI", "AQI", "SGI", "DEPI", "SGAI", "LVGI", "TATA"]
@@ -40,9 +42,12 @@ class CompanySummary(BaseModel):
     name_ar: str
     name_en: str
     sector: str
-    risk_score: int
-    risk_level: RiskLevel
+    risk_score: int | None = None
+    risk_level: RiskLevel | None = None
     trend: Literal["up", "down", "stable"] = "stable"
+    data_status: DataStatus = "ok"
+    confidence: ConfidenceLevel | None = None
+    message_ar: str | None = None
 
 
 class ScoreHistoryItem(BaseModel):
@@ -69,17 +74,22 @@ class CompanyDetail(BaseModel):
     name_ar: str
     name_en: str
     sector: str
-    risk_score: int
-    risk_level: RiskLevel
+    risk_score: int | None = None
+    risk_level: RiskLevel | None = None
     m_score: float | None = None
-    latest_year: int
-    score_history: list[ScoreHistoryItem]
-    flags_count: int
-    top_flags: list[TopFlag]
-    key_metrics: KeyMetrics
+    latest_year: int | None = None
+    score_history: list[ScoreHistoryItem] = Field(default_factory=list)
+    flags_count: int = 0
+    top_flags: list[TopFlag] = Field(default_factory=list)
+    key_metrics: KeyMetrics = Field(default_factory=KeyMetrics)
     shap_top1: str | None = None
     indicators: IndicatorSet | None = None
     sector_avg_indicators: IndicatorSet | None = None
+    data_status: DataStatus = "ok"
+    confidence: ConfidenceLevel | None = None
+    confidence_pct: float | None = None
+    message_ar: str | None = None
+    scoring_eligible: bool = True
 
 
 class FlagItem(BaseModel):
@@ -116,4 +126,18 @@ class MarketOverview(BaseModel):
     distribution: RiskDistribution
     top_risks: list[TopRiskItem]
     sector_breakdown: list[SectorBreakdown]
+    updated_at: str
+    banks_excluded: int = 0
+    banks_note_ar: str | None = None
+
+
+class RefreshResponse(BaseModel):
+    status: str
+    started_at: str
+    finished_at: str
+    duration_seconds: float
+    companies_scored: int
+    total_companies: int
+    avg_risk_score: float
+    distribution: RiskDistribution
     updated_at: str

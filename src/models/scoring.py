@@ -9,6 +9,7 @@ import numpy as np
 import pandas as pd
 
 from src.models.beneish import M_SCORE_THRESHOLD
+from src.models.data_quality import confidence_from_row, impute_row_for_scoring
 
 WEIGHTS = {
     "m_score": 0.40,
@@ -259,10 +260,13 @@ def compute_risk_score(
     xgb_score: float | None = None,
 ) -> dict[str, Any]:
     """Composite risk score for one company-year."""
-    m_norm = norm_m_score(row.get("m_score"))
-    anomaly = norm_if_score(if_score) if if_score is not None else simple_anomaly_score(row, sector_df)
+    confidence, confidence_pct = confidence_from_row(row)
+    scoring_row = impute_row_for_scoring(row) if confidence == "low" else row
+
+    m_norm = norm_m_score(scoring_row.get("m_score"))
+    anomaly = norm_if_score(if_score) if if_score is not None else simple_anomaly_score(scoring_row, sector_df)
     ml_prob = xgb_score if xgb_score is not None else 15.0
-    flags = evaluate_rule_flags(row, company_history)
+    flags = evaluate_rule_flags(scoring_row, company_history)
     rules = rule_flags_score(flags)
 
     risk = (
@@ -280,5 +284,7 @@ def compute_risk_score(
         "anomaly_score": round(anomaly, 1),
         "xgb_score": round(ml_prob, 1),
         "rule_flags_score": round(rules, 1),
+        "confidence": confidence,
+        "confidence_pct": confidence_pct,
         "flags": flags,
     }
