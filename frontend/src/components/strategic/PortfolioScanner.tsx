@@ -75,6 +75,20 @@ export default function PortfolioScanner({ onSelect }: Props) {
 
   const sorted = report ? [...report.rows].sort((a, b) => b.risk_score - a.risk_score) : [];
 
+  const loadDemoFile = async () => {
+    try {
+      const res = await fetch("/demo/alinma_corporate_portfolio_2025.xlsx");
+      if (!res.ok) throw new Error("تعذّر تحميل ملف الديمو");
+      const blob = await res.blob();
+      const file = new File([blob], DEMO_ALINMA_PORTFOLIO.file_name, {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
+      await handleFile(file);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "تعذّر تحميل ملف الديمو");
+    }
+  };
+
   return (
     <div className="space-y-6">
       <Card padding="sm" className="border-ink/20 bg-ink/5 dark:bg-ink/30">
@@ -82,6 +96,20 @@ export default function PortfolioScanner({ onSelect }: Props) {
         <p className="mt-2 text-sm text-ink-soft dark:text-bg/75">
           ارفع ملف CSV أو Excel برموز شركات المحفظة — فرز الانكشاف وتحديد أعلى المخاطر في ثوانٍ.
         </p>
+        <div className="mt-3 flex flex-wrap gap-2">
+          <Button variant="secondary" size="sm" onClick={loadDemoFile}>
+            <Upload className="h-3.5 w-3.5" strokeWidth={2} />
+            فحص ملف الإنماء (ديمو)
+          </Button>
+          <a
+            href="/demo/alinma_corporate_portfolio_2025.xlsx"
+            download={DEMO_ALINMA_PORTFOLIO.file_name}
+            className="inline-flex items-center gap-1.5 rounded-[var(--radius-control)] border border-line bg-surface px-3 py-1.5 text-xs font-bold text-primary transition hover:border-primary dark:border-bg/20"
+          >
+            <Download className="h-3.5 w-3.5" strokeWidth={2} />
+            تحميل {DEMO_ALINMA_PORTFOLIO.file_name}
+          </a>
+        </div>
       </Card>
 
       <Card
