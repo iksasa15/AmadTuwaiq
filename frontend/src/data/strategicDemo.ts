@@ -78,13 +78,20 @@ export type PortfolioRow = {
   flags: number;
 };
 
+export const FUTURE_SECTIONS = [
+  { id: "sentiment" as const, label: "تحليل نبرة التقارير", badge: "جديد 100%" },
+  { id: "network" as const, label: "شبكة العلاقات المالية", badge: "جديد 100%" },
+  { id: "whatif" as const, label: "محاكاة ماذا لو؟", badge: "ديمو" },
+];
+
+export type FutureSectionId = (typeof FUTURE_SECTIONS)[number]["id"];
+
+/** @deprecated استخدم FUTURE_SECTIONS — يُبقى للتوافق */
 export const STRATEGIC_SECTIONS = [
-  { id: "sentiment", label: "رادار النصّ", badge: "جديد 100%" },
-  { id: "network", label: "الشبكة الجنائية", badge: "جديد 100%" },
-  { id: "whatif", label: "ماذا لو؟", badge: "جديد 100%" },
-  { id: "timemachine", label: "آلة الزمن", badge: "مثبت" },
-  { id: "prompts", label: "أسئلة المدقق", badge: "عملي" },
-  { id: "portfolio", label: "درع الإنماء", badge: "للبنك" },
+  ...FUTURE_SECTIONS,
+  { id: "timemachine" as const, label: "آلة الزمن", badge: "مثبت" },
+  { id: "prompts" as const, label: "أسئلة المدقق", badge: "عملي" },
+  { id: "portfolio" as const, label: "درع الإنماء", badge: "للبنك" },
 ] as const;
 
 export type StrategicSectionId = (typeof STRATEGIC_SECTIONS)[number]["id"];
