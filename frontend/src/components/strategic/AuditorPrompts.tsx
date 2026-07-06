@@ -1,12 +1,13 @@
 import { DEMO_AUDITOR_PROMPTS } from "../../data/strategicDemo";
 import { MessageSquare } from "../ui/icons";
+import Card from "../ui/Card";
 
 export default function AuditorPrompts() {
   const prompts = Object.values(DEMO_AUDITOR_PROMPTS);
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-primary/30 bg-primary/5 p-4">
+      <Card variant="accent" padding="sm" className="border-primary/30 bg-primary/5">
         <p className="flex items-center gap-2 text-sm font-bold text-primary">
           <MessageSquare className="h-4 w-4" strokeWidth={2} />
           مساعد المدقق — أسئلة استجواب جاهزة
@@ -14,14 +15,11 @@ export default function AuditorPrompts() {
         <p className="mt-2 text-sm text-ink-soft dark:text-bg/75">
           بمجرد رصد إشارة حمراء، يصيغ رقيب أسئلة محاسبية مدعومة بالأدلة لمواجهة الشركة في مقابلة التمويل.
         </p>
-      </div>
+      </Card>
 
       <div className="grid gap-4 lg:grid-cols-2">
         {prompts.map((p) => (
-          <article
-            key={p.flag_id}
-            className="rounded-xl border border-line bg-white p-5 dark:border-bg/10 dark:bg-ink/30"
-          >
+          <Card key={p.flag_id} variant="elevated">
             <h3 className="font-bold text-ink dark:text-bg">{p.title_ar}</h3>
             <p className="mt-1 text-[10px] font-semibold text-primary">{p.negotiation_style}</p>
             <ol className="mt-4 space-y-3">
@@ -32,7 +30,7 @@ export default function AuditorPrompts() {
                 </li>
               ))}
             </ol>
-          </article>
+          </Card>
         ))}
       </div>
     </div>

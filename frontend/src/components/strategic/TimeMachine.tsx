@@ -4,6 +4,8 @@ import { ALMAJIL_TIMELINE } from "../../data/strategicDemo";
 import { RISK_COLOR } from "../../utils/risk";
 import InteractiveTimeline from "./InteractiveTimeline";
 import { History } from "../ui/icons";
+import Card from "../ui/Card";
+import Button from "../ui/Button";
 
 type Props = {
   onSelectMobily?: () => void;
@@ -32,7 +34,7 @@ export default function TimeMachine({ onSelectMobily }: Props) {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-secondary/30 bg-secondary/5 p-4">
+      <Card padding="sm" className="border-secondary/30 bg-secondary/5">
         <p className="flex items-center gap-2 text-sm font-bold text-secondary">
           <History className="h-4 w-4" strokeWidth={2} />
           إثبات النموذج — آلة الزمن الرقابية
@@ -40,23 +42,22 @@ export default function TimeMachine({ onSelectMobily }: Props) {
         <p className="mt-2 text-sm text-ink-soft dark:text-bg/75">
           أزمات حقيقية سعودية — رقيب كان سيعطي إنذاراً قبل الكشف الرسمي.
         </p>
-      </div>
+      </Card>
 
       <div className="flex gap-2">
         {[
           { id: "mobily" as const, label: "موبايلي 2014" },
           { id: "almajil" as const, label: "المعجل 2016" },
         ].map((c) => (
-          <button
+          <Button
             key={c.id}
-            type="button"
+            variant={caseId === c.id ? "primary" : "secondary"}
+            size="sm"
             onClick={() => switchCase(c.id)}
-            className={`rounded-full px-4 py-1.5 text-sm font-semibold ${
-              caseId === c.id ? "bg-ink text-bg dark:bg-primary" : "border border-line bg-white dark:bg-ink/30"
-            }`}
+            className="rounded-full"
           >
             {c.label}
-          </button>
+          </Button>
         ))}
       </div>
 
@@ -66,25 +67,23 @@ export default function TimeMachine({ onSelectMobily }: Props) {
           { label: "أشهر قبل الكشف", value: meta.months, color: "#8B84D7" },
           { label: "الكشف الرسمي", value: meta.crisis, color: "#C66E4E", small: true },
         ].map((s) => (
-          <div key={s.label} className="rounded-xl border border-line bg-white p-4 text-center dark:border-bg/10 dark:bg-ink/30">
-            <p className="text-xs text-ink-faint">{s.label}</p>
+          <Card key={s.label} className="text-center">
+            <p className="label-caps">{s.label}</p>
             <p className={`font-black ${s.small ? "text-sm" : "text-3xl"}`} style={{ color: s.color }}>
               {s.value}
             </p>
-          </div>
+          </Card>
         ))}
       </div>
 
-      <InteractiveTimeline steps={steps} selectedYear={year} onSelectYear={setYear} />
+      <Card variant="elevated" padding="lg">
+        <InteractiveTimeline steps={steps} selectedYear={year} onSelectYear={setYear} />
+      </Card>
 
       {caseId === "mobily" && onSelectMobily && (
-        <button
-          type="button"
-          onClick={onSelectMobily}
-          className="text-sm font-bold text-primary hover:underline"
-        >
+        <Button variant="ghost" size="sm" onClick={onSelectMobily} className="text-primary">
           عرض تفاصيل موبايلي 2013 ←
-        </button>
+        </Button>
       )}
     </div>
   );
