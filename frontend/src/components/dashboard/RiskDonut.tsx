@@ -22,16 +22,18 @@ export default function RiskDonut({ overview }: Props) {
 
   return (
     <div className="flex flex-col items-center gap-4 md:flex-row md:justify-center">
-      <ResponsiveContainer width="100%" height={220} maxWidth={220}>
-        <PieChart>
-          <Pie data={data} dataKey="value" innerRadius={55} outerRadius={85} paddingAngle={3}>
-            {data.map((e) => (
-              <Cell key={e.key} fill={e.fill} />
-            ))}
-          </Pie>
-          <Tooltip formatter={(v: number, name: string) => [`${v} شركة`, name]} />
-        </PieChart>
-      </ResponsiveContainer>
+      <div className="mx-auto w-full max-w-[220px]">
+        <ResponsiveContainer width="100%" height={220}>
+          <PieChart>
+            <Pie data={data} dataKey="value" innerRadius={55} outerRadius={85} paddingAngle={3}>
+              {data.map((e) => (
+                <Cell key={e.key} fill={e.fill} />
+              ))}
+            </Pie>
+            <Tooltip formatter={(v) => [`${v ?? 0} شركة`, ""]} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
       <ul className="grid grid-cols-2 gap-2 text-sm">
         {data.map((e) => (
           <li key={e.key} className="flex items-center gap-2">

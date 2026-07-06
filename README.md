@@ -115,6 +115,30 @@ docker compose up --build
 
 **Swagger:** http://localhost:8000/docs
 
+## اليوم 6 ✓ — Dashboard
+
+- **Market Overview:** Hero + donut chart + جدول + فلتر قطاع + فرز
+- **صفحة الشركة:** Score ring 72pt + إشارات حمراء + Recharts (خطي + radar)
+- Skeletons + empty states + error handling
+- Dark mode + responsive mobile
+- `frontend/vercel.json` للنشر
+
+```bash
+# Terminal 1
+uvicorn src.api.main:app --reload --port 8000
+
+# Terminal 2
+cd frontend && npm run dev
+```
+
+**نشر Frontend (Vercel):**
+```bash
+cd frontend && npx vercel --prod
+# عيّن VITE_API_URL=https://your-api.railway.app/api/v1
+```
+
+**نشر API (Railway/Render):** Dockerfile جاهز — `docker compose up api`
+
 ## الفريق
 
 | العضو | الدور |

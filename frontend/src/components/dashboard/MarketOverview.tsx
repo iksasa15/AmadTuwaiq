@@ -73,7 +73,7 @@ export default function MarketOverviewPage({ onSelect }: Props) {
             <span className="mr-2 text-2xl font-bold text-ink-faint">شركة</span>
           </p>
           <p className="mt-3 text-sm text-ink-soft dark:text-bg/70">
-            متوسط درجة المخاطr:{" "}
+            متوسط درجة المخاطر:{" "}
             <strong>{overview?.avg_risk_score ?? "—"}</strong>
           </p>
         </div>

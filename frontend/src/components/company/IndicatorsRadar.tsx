@@ -37,7 +37,7 @@ export default function IndicatorsRadar({ indicators, sectorAvg }: Props) {
         <RadarChart data={data} cx="50%" cy="50%" outerRadius="70%">
           <PolarGrid stroke="rgba(12,35,65,0.15)" />
           <PolarAngleAxis dataKey="subject" tick={{ fontSize: 10 }} />
-          <Tooltip formatter={(v: number) => `${v.toFixed(0)}%`} />
+          <Tooltip formatter={(v) => `${Number(v ?? 0).toFixed(0)}%`} />
           <Radar name="الشركة" dataKey="company" stroke="#C66E4E" fill="#C66E4E" fillOpacity={0.35} />
           <Radar name="القطاع" dataKey="sector" stroke="#8B84D7" fill="#8B84D7" fillOpacity={0.2} />
           <Legend />
