@@ -8,6 +8,7 @@ import {
   ClipboardList,
   Flag,
   LayoutDashboard,
+  SlidersHorizontal,
   Table2,
 } from "../ui/icons";
 import ErrorBanner from "../ui/ErrorBanner";
@@ -19,12 +20,15 @@ import ScoreHistoryChart from "./ScoreHistoryChart";
 import IndicatorsRadar from "./IndicatorsRadar";
 import FinancialStatementsPanel from "./FinancialStatements";
 import { CompanyProfileCard, ScoreBreakdownCard } from "./CompanyExtras";
+import CompanyWhatIfSimulator from "./CompanyWhatIfSimulator";
+import { api, type TimelineResponse } from "../../api/client";
 
 type Props = { ticker: string; onBack: () => void };
-type PageTab = "overview" | "statements" | "flags";
+type PageTab = "overview" | "statements" | "flags" | "whatif";
 
 const PAGE_TABS: { id: PageTab; label: string; icon: typeof LayoutDashboard }[] = [
   { id: "overview", label: "نظرة عامة", icon: LayoutDashboard },
+  { id: "whatif", label: "محاكاة ماذا لو؟", icon: SlidersHorizontal },
   { id: "statements", label: "القوائم المالية", icon: Table2 },
   { id: "flags", label: "الإشارات", icon: Flag },
 ];
@@ -38,15 +42,20 @@ export default function CompanyPage({ ticker, onBack }: Props) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [tab, setTab] = useState<PageTab>("overview");
+  const [timeline, setTimeline] = useState<TimelineResponse | null>(null);
 
   const load = () => {
     setLoading(true);
     setError("");
-    Promise.all([ds.company(ticker), ds.flags(ticker)])
-      .then(([c, f]) => {
+    const timelineReq = demoMode
+      ? Promise.resolve(null)
+      : api.timeline(ticker).catch(() => null);
+    Promise.all([ds.company(ticker), ds.flags(ticker), timelineReq])
+      .then(([c, f, tl]) => {
         if (!c) throw new Error("Company not found");
         setCompany(c);
         setFlags(f);
+        setTimeline(tl);
       })
       .catch((e) => setError(e.message))
       .finally(() => setLoading(false));
@@ -197,12 +206,21 @@ export default function CompanyPage({ ticker, onBack }: Props) {
           )}
 
           <div className="grid gap-6 lg:grid-cols-2">
-            <ScoreHistoryChart history={company.score_history} />
+            <ScoreHistoryChart history={company.score_history} timeline={timeline} />
             <IndicatorsRadar indicators={company.indicators} sectorAvg={company.sector_avg_indicators} />
           </div>
 
           <ScoreBreakdownCard company={company} />
         </div>
+      )}
+
+      {tab === "whatif" && !demoMode && company.scoring_eligible && (
+        <CompanyWhatIfSimulator ticker={ticker} />
+      )}
+      {tab === "whatif" && demoMode && (
+        <p className="rounded-xl border border-line bg-white p-6 text-sm text-ink-soft dark:border-bg/10 dark:bg-ink/30">
+          المحاكاة الحية متوفرة في وضع API — عطّل وضع العرض من الشريط العلوي، أو جرّب المحاكي في تبويب «قدرات رقيب».
+        </p>
       )}
 
       {/* Tab: Financial Statements */}

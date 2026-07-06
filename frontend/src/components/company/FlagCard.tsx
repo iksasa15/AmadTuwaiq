@@ -3,13 +3,24 @@ import type { FlagItem } from "../../api/client";
 import { DEMO_AUDITOR_PROMPTS } from "../../data/strategicDemo";
 import { useDemoMode } from "../../hooks/useDemoMode";
 import { formatEvidence } from "../../utils/risk";
-import { ChevronDown, ChevronUp, MessageSquare, Paperclip, SeverityIcon } from "../ui/icons";
+import { Check, ChevronDown, ChevronUp, Copy, MessageSquare, Paperclip, SeverityIcon } from "../ui/icons";
 
 export default function FlagCard({ flag }: { flag: FlagItem }) {
   const { demoMode } = useDemoMode();
   const [open, setOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
   const evidence = formatEvidence(flag.evidence);
-  const prompts = demoMode ? DEMO_AUDITOR_PROMPTS[flag.flag_id] : undefined;
+
+  const prompt =
+    flag.interrogation_prompt_ar ??
+    (demoMode ? DEMO_AUDITOR_PROMPTS[flag.flag_id]?.questions_ar[0] : undefined);
+
+  const copyPrompt = async () => {
+    if (!prompt) return;
+    await navigator.clipboard.writeText(prompt);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <article className="rounded-xl border border-line bg-white p-5 shadow-sm transition hover:border-primary/30 dark:border-bg/10 dark:bg-ink/40">
@@ -37,30 +48,45 @@ export default function FlagCard({ flag }: { flag: FlagItem }) {
           <span>{evidence}</span>
         </p>
       )}
-      {prompts && (
-        <div className="mt-4 border-t border-line/60 pt-3 dark:border-bg/10">
-          <button
-            type="button"
-            onClick={() => setOpen((o) => !o)}
-            className="flex w-full items-center justify-between text-xs font-bold text-primary"
-          >
-            <span className="flex items-center gap-1.5">
+      {prompt && (
+        <div className="mt-4 rounded-lg border border-primary/20 bg-primary/5 px-3 py-3 dark:bg-primary/10">
+          <div className="mb-2 flex items-center justify-between">
+            <p className="flex items-center gap-1.5 text-xs font-bold text-primary">
               <MessageSquare className="h-3.5 w-3.5" strokeWidth={2} />
-              أسئلة مقترحة للمدقق
-            </span>
-            {open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
-          </button>
-          {open && (
-            <ol className="mt-3 space-y-2">
-              {prompts.questions_ar.map((q, i) => (
-                <li key={i} className="text-xs leading-relaxed text-ink-soft dark:text-bg/75">
-                  <span className="font-bold text-accent">{i + 1}.</span> «{q}»
-                </li>
+              سؤال مقترح للموظف الائتماني
+            </p>
+            <button
+              type="button"
+              onClick={copyPrompt}
+              className="inline-flex items-center gap-1 text-[10px] font-bold text-ink-faint hover:text-primary"
+            >
+              {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+              {copied ? "تم النسخ" : "نسخ السؤال"}
+            </button>
+          </div>
+          <p className="text-sm italic leading-relaxed text-ink-soft dark:text-bg/75">«{prompt}»</p>
+          {demoMode && DEMO_AUDITOR_PROMPTS[flag.flag_id] && (
+            <button
+              type="button"
+              onClick={() => setOpen((o) => !o)}
+              className="mt-2 flex items-center gap-1 text-[10px] font-bold text-primary"
+            >
+              {open ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+              أسئلة إضافية
+            </button>
+          )}
+          {open && DEMO_AUDITOR_PROMPTS[flag.flag_id] && (
+            <ol className="mt-2 space-y-1 border-t border-primary/10 pt-2">
+              {DEMO_AUDITOR_PROMPTS[flag.flag_id].questions_ar.slice(1).map((q, i) => (
+                <li key={i} className="text-xs text-ink-soft">• {q}</li>
               ))}
             </ol>
           )}
         </div>
       )}
+      <p className="mt-3 text-[10px] text-ink-faint">
+        مؤشر تحليلي يستدعي تدقيقًا إضافيًا، ليس اتهامًا.
+      </p>
     </article>
   );
 }

@@ -7,6 +7,7 @@ import type {
   ScoreBreakdown,
 } from "../api/client";
 import { getDemoFinancials } from "./demoFinancials";
+import { DEMO_AUDITOR_PROMPTS } from "./strategicDemo";
 
 /** بيانات عرض — مصممة للـ demo أمام الحكام */
 
@@ -543,19 +544,27 @@ export function getDemoCompany(ticker: string): CompanyDetail | null {
 
 export function getDemoFlags(ticker: string): FlagItem[] {
   const norm = ticker.includes(".") ? ticker : `${ticker}.SR`;
-  if (DEMO_FLAGS[norm]?.length) return DEMO_FLAGS[norm];
-  const summary = DEMO_COMPANIES.find((c) => c.ticker === norm);
-  const score = summary?.risk_score ?? 0;
-  if (score > 30) {
-    return [{
-      flag_id: "anomaly_detected",
-      title_ar: "انحراف إحصائي",
-      severity: score > 50 ? "critical" : "warning",
-      explanation_ar: `Isolation Forest يكتشف انحرافاً عن متوسط قطاع ${summary?.sector ?? ""}.`,
-      evidence: { metric: "anomaly_score", value: score, threshold: 30, year: 2025 },
-    }];
+  let flags: FlagItem[] = [];
+  if (DEMO_FLAGS[norm]?.length) flags = [...DEMO_FLAGS[norm]];
+  else {
+    const summary = DEMO_COMPANIES.find((c) => c.ticker === norm);
+    const score = summary?.risk_score ?? 0;
+    if (score > 30) {
+      flags = [{
+        flag_id: "anomaly_detected",
+        title_ar: "انحراف إحصائي",
+        severity: score > 50 ? "critical" : "warning",
+        explanation_ar: `Isolation Forest يكتشف انحرافاً عن متوسط قطاع ${summary?.sector ?? ""}.`,
+        evidence: { metric: "anomaly_score", value: score, threshold: 30, year: 2025 },
+      }];
+    }
   }
-  return [];
+  return flags.map((f) => ({
+    ...f,
+    interrogation_prompt_ar:
+      DEMO_AUDITOR_PROMPTS[f.flag_id]?.questions_ar[0] ??
+      "يُنصح بمراجعة هذا المؤشر مع الشركة للحصول على توضيح إضافي.",
+  }));
 }
 
 const delay = (ms: number) => new Promise((r) => setTimeout(r, ms));

@@ -65,6 +65,55 @@ export type FlagItem = {
   severity: string;
   explanation_ar: string;
   evidence: Record<string, unknown>;
+  interrogation_prompt_ar?: string | null;
+};
+
+export type SimulationResult = {
+  ticker: string;
+  original_score: number;
+  simulated_score: number;
+  score_delta: number;
+  original_level: RiskLevel;
+  simulated_level: RiskLevel;
+  triggered_flags: string[];
+  removed_flags: string[];
+};
+
+export type TimelinePoint = {
+  period: string;
+  year: number;
+  risk_score: number;
+  risk_level: RiskLevel;
+  is_known_crisis_point: boolean;
+  crisis_label_ar: string | null;
+  is_first_high_risk: boolean;
+};
+
+export type TimelineResponse = {
+  ticker: string;
+  has_known_case: boolean;
+  months_before_official: number | null;
+  source_note: string | null;
+  points: TimelinePoint[];
+};
+
+export type PortfolioRow = {
+  ticker: string;
+  name_ar: string;
+  risk_score: number;
+  risk_level: RiskLevel;
+  top_flag_ar: string | null;
+};
+
+export type PortfolioReport = {
+  total_companies: number;
+  matched_companies: number;
+  unmatched_tickers: string[];
+  safe_count: number;
+  watch_count: number;
+  danger_count: number;
+  portfolio_safety_pct: number;
+  rows: PortfolioRow[];
 };
 
 export type MarketOverview = {
@@ -89,8 +138,21 @@ async function get<T>(path: string): Promise<T> {
   return res.json();
 }
 
-async function post<T>(path: string): Promise<T> {
-  const res = await fetch(`${BASE}${path}`, { method: "POST" });
+async function post<T>(path: string, body?: unknown): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, {
+    method: "POST",
+    headers: body != null ? { "Content-Type": "application/json" } : undefined,
+    body: body != null ? JSON.stringify(body) : undefined,
+  });
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || `HTTP ${res.status}`);
+  }
+  return res.json();
+}
+
+async function postForm<T>(path: string, form: FormData): Promise<T> {
+  const res = await fetch(`${BASE}${path}`, { method: "POST", body: form });
   if (!res.ok) {
     const text = await res.text();
     throw new Error(text || `HTTP ${res.status}`);
@@ -102,6 +164,20 @@ export const api = {
   companies: () => get<CompanySummary[]>("/companies"),
   company: (ticker: string) => get<CompanyDetail>(`/companies/${encodeURIComponent(ticker)}`),
   flags: (ticker: string) => get<FlagItem[]>(`/companies/${encodeURIComponent(ticker)}/flags`),
+  timeline: (ticker: string) => get<TimelineResponse>(`/companies/${encodeURIComponent(ticker)}/timeline`),
   overview: () => get<MarketOverview>("/market/overview"),
   refresh: () => post<Record<string, unknown>>("/refresh?skip_fetch=true"),
+  simulate: (body: {
+    ticker: string;
+    revenue_delta_pct?: number;
+    receivables_delta_pct?: number;
+    cogs_delta_pct?: number;
+    cfo_delta_pct?: number;
+    depreciation_delta_pct?: number;
+  }) => post<SimulationResult>("/simulate", body),
+  scanPortfolio: (file: File) => {
+    const form = new FormData();
+    form.append("file", file);
+    return postForm<PortfolioReport>("/portfolio/scan", form);
+  },
 };
