@@ -10,7 +10,6 @@ import EmptyState from "../ui/EmptyState";
 import { HeroSkeleton, TableSkeleton } from "../ui/Skeleton";
 import PageHeader from "../ui/PageHeader";
 import PageIntro from "../ui/PageIntro";
-import DemoBanner from "../layout/DemoBanner";
 import RiskDonut from "./RiskDonut";
 import CompanyTable from "./CompanyTable";
 import RefreshDemoButton from "../demo/RefreshDemoButton";
@@ -83,7 +82,6 @@ export default function MarketOverviewPage({ onSelect, onNavigate }: Props) {
     return (
       <>
         <PageHeader title={meta.title} />
-        <DemoBanner />
         <ErrorBanner message={error} onRetry={load} />
       </>
     );
@@ -93,7 +91,6 @@ export default function MarketOverviewPage({ onSelect, onNavigate }: Props) {
     <>
       <PageHeader title={meta.title} description={meta.description} />
       <PageIntro benefit={meta.benefit} contains={meta.contains} audience={meta.audience} />
-      <DemoBanner />
       <QuickStartCards
         onNavigate={onNavigate}
         onScrollToTable={scrollToTable}

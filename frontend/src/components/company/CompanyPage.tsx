@@ -198,7 +198,7 @@ export default function CompanyPage({ ticker, onBack }: Props) {
       {tab === "whatif" && demoMode && (
         <Card>
           <p className="text-sm text-ink-soft">
-            المحاكاة الحية متوفرة في وضع API — عطّل وضع العرض من الشريط العلوي، أو جرّب المحاكي في «قدرات مستقبلية».
+            المحاكاة الحية تتطلب اتصالاً بالـ API — شغّل Backend على المنفذ 8000.
           </p>
         </Card>
       )}
