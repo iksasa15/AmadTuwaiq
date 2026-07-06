@@ -8,18 +8,27 @@ import AlertsPage from "./components/demo/AlertsPage";
 import MobilyCasePage from "./components/demo/MobilyCasePage";
 import SectorsPage from "./components/demo/SectorsPage";
 import AboutPage from "./components/demo/AboutPage";
-import StrategicHub from "./components/strategic/StrategicHub";
-import { isMobilyTicker } from "./utils/mobily";
+import PortfolioPage from "./components/demo/PortfolioPage";
+import PromptsPage from "./components/demo/PromptsPage";
+import BacktestPage from "./components/demo/BacktestPage";
+import FutureCapabilitiesPage from "./components/demo/FutureCapabilitiesPage";
+import GuidePage from "./components/demo/GuidePage";
+import { isMobilyTicker, MOBILY_TICKER } from "./utils/mobily";
 
 export default function App() {
-  const [tab, setTab] = useState<TabId>("market");
+  const [tab, setTab] = useState<TabId>("home");
   const [selected, setSelected] = useState<string | null>(null);
   const [mobilyDetail, setMobilyDetail] = useState(false);
 
   const openCompany = (ticker: string) => {
     setSelected(ticker);
     setMobilyDetail(!isMobilyTicker(ticker));
-    setTab("market");
+    setTab("home");
+  };
+
+  const openMobilyCase = () => {
+    setSelected(MOBILY_TICKER);
+    setMobilyDetail(false);
   };
 
   const closeCompany = () => {
@@ -50,11 +59,17 @@ export default function App() {
           )
         ) : (
           <>
-            {tab === "market" && <MarketOverviewPage onSelect={openCompany} />}
+            {tab === "home" && (
+              <MarketOverviewPage onSelect={openCompany} onNavigate={setTab} />
+            )}
             {tab === "alerts" && <AlertsPage onSelect={openCompany} />}
             {tab === "sectors" && <SectorsPage />}
-            {tab === "strategic" && <StrategicHub onSelectCompany={openCompany} />}
-            {tab === "about" && <AboutPage />}
+            {tab === "portfolio" && <PortfolioPage onSelect={openCompany} />}
+            {tab === "prompts" && <PromptsPage />}
+            {tab === "backtest" && <BacktestPage onSelectMobily={openMobilyCase} />}
+            {tab === "future" && <FutureCapabilitiesPage onSelect={openCompany} />}
+            {tab === "guide" && <GuidePage onNavigate={setTab} />}
+            {tab === "about" && <AboutPage onNavigate={setTab} />}
           </>
         )}
       </AppShell>

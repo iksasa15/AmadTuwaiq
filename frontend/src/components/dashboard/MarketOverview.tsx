@@ -1,25 +1,33 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { createDataSource } from "../../api/dataSource";
 import { useDemoMode } from "../../hooks/useDemoMode";
 import type { CompanySummary, MarketOverview } from "../../api/client";
 import { DEMO_ACTIVITY, SECTOR_AR } from "../../data/demoExtras";
+import { getPageMeta } from "../../config/navigation";
+import type { TabId } from "../../config/navigation";
 import ErrorBanner from "../ui/ErrorBanner";
 import EmptyState from "../ui/EmptyState";
 import { HeroSkeleton, TableSkeleton } from "../ui/Skeleton";
 import PageHeader from "../ui/PageHeader";
+import PageIntro from "../ui/PageIntro";
 import DemoBanner from "../layout/DemoBanner";
 import RiskDonut from "./RiskDonut";
 import CompanyTable from "./CompanyTable";
 import RefreshDemoButton from "../demo/RefreshDemoButton";
-import MarketStatsBar from "./MarketStatsBar";
 import ActivityFeed from "./ActivityFeed";
+import QuickStartCards from "./QuickStartCards";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
 import { cn } from "../../lib/cn";
 
-type Props = { onSelect: (ticker: string) => void };
+type Props = {
+  onSelect: (ticker: string) => void;
+  onNavigate: (tab: TabId) => void;
+};
 
-export default function MarketOverviewPage({ onSelect }: Props) {
+export default function MarketOverviewPage({ onSelect, onNavigate }: Props) {
+  const meta = getPageMeta("home");
+  const tableRef = useRef<HTMLDivElement>(null);
   const { demoMode } = useDemoMode();
   const ds = useMemo(() => createDataSource(demoMode), [demoMode]);
 
@@ -56,6 +64,10 @@ export default function MarketOverviewPage({ onSelect }: Props) {
     return list;
   }, [companies, sector, sortDesc]);
 
+  const scrollToTable = () => {
+    tableRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   if (loading) {
     return (
       <>
@@ -71,7 +83,7 @@ export default function MarketOverviewPage({ onSelect }: Props) {
   if (error) {
     return (
       <>
-        <PageHeader title="منصة رقابة مالية استباقية" />
+        <PageHeader title={meta.title} />
         <DemoBanner />
         <ErrorBanner message={error} onRetry={load} />
       </>
@@ -80,12 +92,13 @@ export default function MarketOverviewPage({ onSelect }: Props) {
 
   return (
     <>
-      <PageHeader
-        title="منصة رقابة مالية استباقية"
-        description="رصد مخاطر التلاعب المحاسبي قبل أن يرصدها السوق"
-      />
+      <PageHeader title={meta.title} description={meta.description} />
+      <PageIntro benefit={meta.benefit} contains={meta.contains} audience={meta.audience} />
       <DemoBanner />
-      <MarketStatsBar />
+      <QuickStartCards
+        onNavigate={onNavigate}
+        onScrollToTable={scrollToTable}
+      />
 
       <Card variant="elevated" padding="lg" className="mb-6 grid gap-6 lg:grid-cols-[1fr_320px]">
         <div className="flex flex-col justify-center">
@@ -122,7 +135,7 @@ export default function MarketOverviewPage({ onSelect }: Props) {
 
       {demoMode && <ActivityFeed items={DEMO_ACTIVITY} onSelect={onSelect} className="mb-6" />}
 
-      <div className="mb-4 flex flex-wrap gap-2">
+      <div ref={tableRef} className="mb-4 flex flex-wrap gap-2">
         <Button
           variant={!sector ? "primary" : "secondary"}
           size="sm"

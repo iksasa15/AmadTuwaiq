@@ -1,18 +1,19 @@
 import { DEMO_ALERTS } from "../../api/dataSource";
-import { DEMO_ACTIVITY } from "../../data/demoExtras";
 import FlagCard from "../company/FlagCard";
 import PageHeader from "../ui/PageHeader";
-import ActivityFeed from "../dashboard/ActivityFeed";
+import PageIntro from "../ui/PageIntro";
+import { getPageMeta } from "../../config/navigation";
 import Section from "../ui/Section";
 import StatCard from "../ui/StatCard";
 import Button from "../ui/Button";
-import { Activity, AlertCircle, AlertTriangle, ArrowRight, Flag } from "../ui/icons";
+import { AlertCircle, AlertTriangle, ArrowRight, Flag } from "../ui/icons";
 
 type Props = {
   onSelect: (ticker: string) => void;
 };
 
 export default function AlertsPage({ onSelect }: Props) {
+  const meta = getPageMeta("alerts");
   const critical = DEMO_ALERTS.filter((a) => a.severity === "critical");
   const warning = DEMO_ALERTS.filter((a) => a.severity === "warning");
   const info = DEMO_ALERTS.filter((a) => a.severity === "info");
@@ -40,10 +41,8 @@ export default function AlertsPage({ onSelect }: Props) {
 
   return (
     <>
-      <PageHeader
-        title="مركز الإشارات الحمراء"
-        description="إشارات رقيب النشطة — مرتبة حسب الخطورة"
-      />
+      <PageHeader title={meta.title} description={meta.description} />
+      <PageIntro benefit={meta.benefit} contains={meta.contains} audience={meta.audience} />
 
       <section className="mb-8 grid gap-4 lg:grid-cols-4">
         {stats.map((s) => (
@@ -68,16 +67,10 @@ export default function AlertsPage({ onSelect }: Props) {
       </Section>
 
       {info.length > 0 && (
-        <Section
-          title="إشارات معلوماتية"
-          icon={<Activity className="h-5 w-5 text-secondary" strokeWidth={2} />}
-          className="mb-10"
-        >
+        <Section title="إشارات معلوماتية" className="mb-10">
           {renderGroup(info)}
         </Section>
       )}
-
-      <ActivityFeed items={DEMO_ACTIVITY} onSelect={onSelect} className="mt-10" />
     </>
   );
 }

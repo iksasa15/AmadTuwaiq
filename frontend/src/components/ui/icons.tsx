@@ -44,19 +44,6 @@ import {
   Wallet,
 } from "lucide-react";
 
-export type TabId =
-  | "home"
-  | "alerts"
-  | "sectors"
-  | "portfolio"
-  | "prompts"
-  | "backtest"
-  | "future"
-  | "guide"
-  | "about";
-
-export type { TabId as AppTabId };
-
 export {
   Activity,
   AlertCircle,
@@ -101,7 +88,8 @@ export {
   Users,
   Wallet,
 };
- = {
+
+const SEVERITY_ICONS = {
   critical: AlertCircle,
   warning: AlertTriangle,
   info: Info,

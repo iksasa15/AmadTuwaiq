@@ -1,4 +1,4 @@
-import { TAB_ICONS, type TabId } from "../ui/icons";
+import { NAV_GROUPS, PAGE_META, type TabId } from "../../config/navigation";
 import { useTheme } from "../../hooks/useTheme";
 import { Moon, Sun } from "../ui/icons";
 import Button from "../ui/Button";
@@ -7,18 +7,48 @@ import { cn } from "../../lib/cn";
 
 export type { TabId };
 
-export const TABS = [
-  { id: "market" as const, label: "السوق", icon: TAB_ICONS.market },
-  { id: "alerts" as const, label: "الإشارات", icon: TAB_ICONS.alerts },
-  { id: "sectors" as const, label: "القطاعات", icon: TAB_ICONS.sectors },
-  { id: "strategic" as const, label: "قدرات رقيب", icon: TAB_ICONS.strategic },
-  { id: "about" as const, label: "عن رقيب", icon: TAB_ICONS.about },
-];
-
 type Props = {
   active: TabId;
   onChange: (tab: TabId) => void;
 };
+
+function NavButton({
+  tab,
+  active,
+  onChange,
+  compact,
+}: {
+  tab: TabId;
+  active: TabId;
+  onChange: (tab: TabId) => void;
+  compact?: boolean;
+}) {
+  const meta = PAGE_META[tab];
+  const Icon = meta.icon;
+  const isActive = active === tab;
+  return (
+    <button
+      type="button"
+      onClick={() => onChange(tab)}
+      title={meta.label}
+      className={cn(
+        "flex items-center gap-3 rounded-[var(--radius-control)] font-semibold transition",
+        compact ? "shrink-0 px-3 py-2 text-xs font-bold" : "w-full px-3 py-2.5 text-sm",
+        isActive
+          ? compact
+            ? "bg-ink text-bg dark:bg-primary"
+            : "border-s-2 border-primary bg-ink text-bg dark:bg-primary dark:text-white"
+          : compact
+            ? "text-ink-soft dark:text-bg/70"
+            : "text-ink-soft hover:bg-bg-deep/60 dark:text-bg/70 dark:hover:bg-ink/50",
+      )}
+    >
+      <Icon className="h-4 w-4 shrink-0" strokeWidth={2} />
+      {!compact && meta.label}
+      {compact && <span className="hidden sm:inline">{meta.label}</span>}
+    </button>
+  );
+}
 
 export default function Sidebar({ active, onChange }: Props) {
   const { dark, toggle } = useTheme();
@@ -33,27 +63,19 @@ export default function Sidebar({ active, onChange }: Props) {
         </div>
       </div>
 
-      <nav className="flex flex-1 flex-col gap-1 p-3">
-        {TABS.map((t) => {
-          const Icon = t.icon;
-          const isActive = active === t.id;
-          return (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => onChange(t.id)}
-              className={cn(
-                "flex items-center gap-3 rounded-[var(--radius-control)] px-3 py-2.5 text-sm font-semibold transition",
-                isActive
-                  ? "border-s-2 border-primary bg-ink text-bg dark:bg-primary dark:text-white"
-                  : "text-ink-soft hover:bg-bg-deep/60 dark:text-bg/70 dark:hover:bg-ink/50",
-              )}
-            >
-              <Icon className="h-4 w-4 shrink-0" strokeWidth={2} />
-              {t.label}
-            </button>
-          );
-        })}
+      <nav className="flex flex-1 flex-col gap-2 overflow-y-auto p-3">
+        {NAV_GROUPS.map((group) => (
+          <div key={group.label || "footer"}>
+            {group.label && (
+              <p className="label-caps mb-1 px-3 pt-2">{group.label}</p>
+            )}
+            <div className="flex flex-col gap-0.5">
+              {group.items.map((tab) => (
+                <NavButton key={tab} tab={tab} active={active} onChange={onChange} />
+              ))}
+            </div>
+          </div>
+        ))}
       </nav>
 
       <div className="border-t border-line px-4 py-4 dark:border-bg/10">
@@ -93,25 +115,9 @@ export function TopNav({ active, onChange }: Props) {
   return (
     <div className="mb-6 flex items-center gap-2 lg:hidden">
       <nav className="flex min-w-0 flex-1 gap-1 overflow-x-auto rounded-[var(--radius-card)] border border-line bg-surface p-1 dark:border-bg/10">
-        {TABS.map((t) => {
-          const Icon = t.icon;
-          const isActive = active === t.id;
-          return (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => onChange(t.id)}
-              title={t.label}
-              className={cn(
-                "flex shrink-0 items-center gap-2 rounded-[var(--radius-control)] px-3 py-2 text-xs font-bold transition",
-                isActive ? "bg-ink text-bg dark:bg-primary" : "text-ink-soft dark:text-bg/70",
-              )}
-            >
-              <Icon className="h-4 w-4" strokeWidth={2} />
-              <span className="hidden sm:inline">{t.label}</span>
-            </button>
-          );
-        })}
+        {NAV_GROUPS.flatMap((g) => g.items).map((tab) => (
+          <NavButton key={tab} tab={tab} active={active} onChange={onChange} compact />
+        ))}
       </nav>
       <Button variant="secondary" size="sm" onClick={toggle} aria-label="تبديل الوضع" className="shrink-0 px-2.5">
         {dark ? <Sun className="h-4 w-4" strokeWidth={2} /> : <Moon className="h-4 w-4" strokeWidth={2} />}

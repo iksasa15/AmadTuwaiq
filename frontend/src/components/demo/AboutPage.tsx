@@ -1,16 +1,33 @@
+import type { TabId } from "../../config/navigation";
 import PageHeader from "../ui/PageHeader";
+import PageIntro from "../ui/PageIntro";
+import { getPageMeta } from "../../config/navigation";
 import { DEMO_MARKET_STATS } from "../../data/demoExtras";
-import { STRATEGIC_SECTIONS } from "../../data/strategicDemo";
-import { Info, Layers, Radar, Settings } from "../ui/icons";
+import { FUTURE_SECTIONS } from "../../data/strategicDemo";
+import { Info, Settings } from "../ui/icons";
 import Card from "../ui/Card";
-import Section from "../ui/Section";
 import StatCard from "../ui/StatCard";
 import Logo from "../ui/Logo";
+import Button from "../ui/Button";
 
-export default function AboutPage() {
+const PLATFORM_FEATURES: { label: string; tab: TabId }[] = [
+  { label: "درع الإنماء", tab: "portfolio" },
+  { label: "أسئلة المدقق", tab: "prompts" },
+  { label: "إثبات النموذج", tab: "backtest" },
+  { label: "قدرات مستقبلية", tab: "future" },
+];
+
+type Props = {
+  onNavigate?: (tab: TabId) => void;
+};
+
+export default function AboutPage({ onNavigate }: Props) {
+  const meta = getPageMeta("about");
+
   return (
     <>
-      <PageHeader title="هاكاثون امد 2026" description="منصة رقابة مالية استباقية" />
+      <PageHeader title={meta.title} description={meta.description} />
+      <PageIntro benefit={meta.benefit} contains={meta.contains} audience={meta.audience} />
 
       <Card padding="lg" className="mb-8 text-center">
         <Logo size="md" className="mx-auto mb-4" />
@@ -19,6 +36,11 @@ export default function AboutPage() {
           منصة رقابة مالية <strong>استباقية</strong> — نرصد مخاطر التلاعب المحاسبي
           قبل أن يرصدها السوق.
         </p>
+        {onNavigate && (
+          <Button variant="secondary" size="sm" onClick={() => onNavigate("guide")} className="mt-4">
+            اقرئي دليل الاستخدام
+          </Button>
+        )}
       </Card>
 
       <div className="mb-8 grid gap-5 lg:grid-cols-2">
@@ -28,10 +50,10 @@ export default function AboutPage() {
             كيف يعمل؟
           </h2>
           <ol className="space-y-3 text-sm text-ink-soft dark:text-bg/75">
-            <li><strong>1.</strong> جلب القوائم المالية (yfinance + CSV يدوي)</li>
-            <li><strong>2.</strong> حساب 8 مؤشرات Beneish + ميزات ML</li>
-            <li><strong>3.</strong> درجة مركّبة 0–100 + 6 قواعد إشارات</li>
-            <li><strong>4.</strong> لوحة تحكم + تنبيهات + backtest</li>
+            <li><strong>1.</strong> جلب القوائم المالية وتحليلها</li>
+            <li><strong>2.</strong> حساب 8 مؤشرات Beneish + نماذج ML</li>
+            <li><strong>3.</strong> درجة مركّبة 0–100 + قواعد إشارات</li>
+            <li><strong>4.</strong> لوحة مراقبة + تنبيهات + أدوات بنكية</li>
           </ol>
         </Card>
         <Card>
@@ -39,58 +61,29 @@ export default function AboutPage() {
           <p className="rounded-[var(--radius-control)] bg-ink p-4 font-mono text-sm text-bg dark:bg-primary/80">
             Risk = 0.40×M + 0.20×IF + 0.15×XGB + 0.25×Rules
           </p>
-          <ul className="mt-4 space-y-2 text-xs text-ink-soft dark:text-bg/70">
-            <li>M-Score: Beneish (Enron, WorldCom)</li>
-            <li>IF: Isolation Forest per-sector</li>
-            <li>XGB: احتمال تلاعب (synthetic inject)</li>
-            <li>Rules: CFO/NI، ذمم، TATA</li>
-          </ul>
-          <p className="mt-4 text-[10px] text-ink-faint">
+          <p className="mt-4 text-xs text-ink-faint">
             مصادر: {DEMO_MARKET_STATS.data_sources.join(" · ")} · آخر تحديث: {DEMO_MARKET_STATS.last_refresh}
           </p>
         </Card>
       </div>
 
-      <Section
-        title="المعمارية"
-        icon={<Layers className="h-5 w-5 text-secondary" strokeWidth={2} />}
-        className="mb-8"
-      >
-        <Card>
-          <pre className="overflow-x-auto rounded-[var(--radius-control)] bg-bg-deep/50 p-5 text-center text-xs leading-loose text-ink-soft dark:bg-ink/50 dark:text-bg/70 lg:text-sm">
-{`yfinance ──► ETL ──► features.parquet
-                          │
-                    ML + Beneish
-                          │
-                   scores + SQLite
-                          │
-                     FastAPI ──► React (RTL)`}
-          </pre>
-        </Card>
-      </Section>
-
-      <Section
-        title="القدرات الاستراتيجية"
-        icon={<Radar className="h-5 w-5 text-primary" strokeWidth={2} />}
-        className="mb-8"
-      >
-        <Card>
-          <p className="mb-4 text-sm text-ink-soft dark:text-bg/75">
-            ست قدرات لا توفرها أنظمة البنك التقليدية — متوفرة في تبويب «قدرات رقيب»:
-          </p>
-          <ul className="grid gap-2 sm:grid-cols-2 lg:grid-cols-3">
-            {STRATEGIC_SECTIONS.map((s) => (
-              <li
-                key={s.id}
-                className="rounded-[var(--radius-control)] bg-bg-deep/50 px-3 py-2 text-sm dark:bg-ink/40"
-              >
-                <strong>{s.label}</strong>
-                <span className="mr-2 text-[10px] text-accent">({s.badge})</span>
-              </li>
-            ))}
-          </ul>
-        </Card>
-      </Section>
+      <Card className="mb-8">
+        <h2 className="section-title mb-4">أقسام المنصة</h2>
+        <ul className="grid gap-2 sm:grid-cols-2">
+          {PLATFORM_FEATURES.map((f) => (
+            <li key={f.tab}>
+              {onNavigate ? (
+                <Button variant="ghost" size="sm" onClick={() => onNavigate(f.tab)} className="w-full justify-start text-primary">
+                  {f.label}
+                </Button>
+              ) : (
+                <span className="text-sm font-semibold">{f.label}</span>
+              )}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 text-xs text-ink-faint">قدرات مستقبلية (ديمو): {FUTURE_SECTIONS.map((s) => s.label).join(" · ")}</p>
+      </Card>
 
       <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {[

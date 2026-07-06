@@ -5,7 +5,6 @@ import TimeMachine from "../strategic/TimeMachine";
 import Card from "../ui/Card";
 import Button from "../ui/Button";
 import { ArrowRight } from "../ui/icons";
-import { MOBILY_TICKER } from "../../utils/mobily";
 
 type Props = {
   onSelectMobily: () => void;

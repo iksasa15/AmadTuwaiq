@@ -14,12 +14,15 @@ import type { MarketOverview } from "../../api/client";
 import { DEMO_SECTOR_META, SECTOR_AR } from "../../data/demoExtras";
 import { Info } from "../ui/icons";
 import PageHeader from "../ui/PageHeader";
+import PageIntro from "../ui/PageIntro";
+import { getPageMeta } from "../../config/navigation";
 import { RISK_COLOR, type RiskLevel } from "../../utils/risk";
 import Card from "../ui/Card";
 import Section from "../ui/Section";
 import RiskBar from "../ui/RiskBar";
 
 export default function SectorsPage() {
+  const meta = getPageMeta("sectors");
   const { demoMode } = useDemoMode();
   const ds = createDataSource(demoMode);
   const [overview, setOverview] = useState<MarketOverview | null>(null);
@@ -46,7 +49,8 @@ export default function SectorsPage() {
 
   return (
     <>
-      <PageHeader title="تحليل القطاعات" description="متوسط درجة المخاطر حسب القطاع" />
+      <PageHeader title={meta.title} description={meta.description} />
+      <PageIntro benefit={meta.benefit} contains={meta.contains} audience={meta.audience} />
 
       <Section title="متوسط درجة المخاطر بالقطاع" className="mb-8">
         <Card variant="elevated" padding="lg">
