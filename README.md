@@ -91,12 +91,31 @@ python -m src.models.train_ml      # تدريب IF + XGB + SHAP
 python -m src.models.run_beneish   # إعادة حساب الدرجة المركّبة
 ```
 
-**الدرجة المركّبة (محدّثة):**
-`0.35·M-Score + 0.25·IF + 0.25·XGB + 0.15·Rules`
+**الدرجة المركّبة (معايرة يوم 5):**
+`0.40·M-Score + 0.20·IF + 0.15·XGB + 0.25·Rules`
+
+## اليوم 5 ✓
+
+- `src/api/main.py` — FastAPI + Swagger `/docs`
+- `src/api/schemas.py` + `src/api/service.py`
+- `docs/scoring-rationale.md` — منطق المعايرة
+- `docker-compose.yml` — api:8000 + web:3000
+- `frontend/` — قائمة شركات + بطاقة تفاصيل (API حقيقي)
+
+```bash
+# Backend
+uvicorn src.api.main:app --reload --port 8000
+
+# Frontend (proxy → API)
+cd frontend && npm run dev
+
+# Docker
+docker compose up --build
+```
+
+**Swagger:** http://localhost:8000/docs
 
 ## الفريق
-
-| العضو | الدور |
 |-------|-------|
 | المطور الخبير | المعمارية، البيانات، النماذج، API |
 | عضو 2 | React Dashboard |
