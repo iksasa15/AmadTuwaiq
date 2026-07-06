@@ -1,28 +1,33 @@
 import { useDemoMode } from "../../hooks/useDemoMode";
+import { Monitor, Radio } from "../ui/icons";
 
 export default function DemoBanner() {
   const { demoMode, toggleDemoMode } = useDemoMode();
 
   return (
     <div
-      className={`mb-6 flex flex-wrap items-center justify-between gap-3 rounded-xl border px-4 py-3 text-sm ${
+      className={`mb-5 flex items-center justify-between gap-4 rounded-lg border px-4 py-2.5 text-sm ${
         demoMode
-          ? "border-secondary/40 bg-secondary/10 dark:border-secondary/30 dark:bg-secondary/15"
-          : "border-status-green/40 bg-status-green/10"
+          ? "border-secondary/30 bg-secondary/8 dark:bg-secondary/12"
+          : "border-status-green/30 bg-status-green/8"
       }`}
     >
-      <div className="flex items-center gap-2">
-        <span className="text-lg">{demoMode ? "🎬" : "🔴"}</span>
-        <span className="font-bold text-ink dark:text-bg">
-          {demoMode ? "وضع العرض — بيانات ديمو للتقديم" : "وضع مباشر — API حقيقي"}
+      <div className="flex items-center gap-2.5">
+        {demoMode ? (
+          <Monitor className="h-4 w-4 text-secondary" strokeWidth={2} />
+        ) : (
+          <Radio className="h-4 w-4 text-status-green" strokeWidth={2} />
+        )}
+        <span className="font-semibold text-ink dark:text-bg">
+          {demoMode ? "وضع العرض — بيانات ديمو" : "وضع مباشر — API"}
         </span>
       </div>
       <button
         type="button"
         onClick={toggleDemoMode}
-        className="rounded-full bg-ink px-4 py-1.5 text-xs font-bold text-bg transition hover:opacity-90 dark:bg-primary"
+        className="rounded-md bg-ink px-3 py-1 text-xs font-bold text-bg dark:bg-primary"
       >
-        {demoMode ? "التبديل للـ API" : "التبديل للديمو"}
+        {demoMode ? "API حقيقي" : "ديمو"}
       </button>
     </div>
   );

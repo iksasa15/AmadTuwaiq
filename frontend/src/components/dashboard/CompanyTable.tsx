@@ -1,10 +1,11 @@
 import type { CompanySummary } from "../../api/client";
 import { RISK_COLOR, RISK_LABEL } from "../../utils/risk";
+import { ArrowDown, ArrowLeft, ArrowUp, ChevronDown, ChevronUp } from "../ui/icons";
 
 function TrendIcon({ trend }: { trend: CompanySummary["trend"] }) {
-  if (trend === "up") return <span className="text-accent" title="ارتفاع">↑</span>;
-  if (trend === "down") return <span className="text-status-green" title="انخفاض">↓</span>;
-  return <span className="text-ink-faint" title="مستقر">→</span>;
+  if (trend === "up") return <ArrowUp className="h-4 w-4 text-accent" strokeWidth={2.5} aria-label="ارتفاع" />;
+  if (trend === "down") return <ArrowDown className="h-4 w-4 text-status-green" strokeWidth={2.5} aria-label="انخفاض" />;
+  return <ArrowLeft className="h-4 w-4 text-ink-faint" strokeWidth={2} aria-label="مستقر" />;
 }
 
 type Props = {
@@ -26,21 +27,31 @@ export default function CompanyTable({ companies, onSelect, sortDesc, onToggleSo
         <button
           type="button"
           onClick={onToggleSort}
-          className="text-xs font-semibold text-primary"
+          className="inline-flex items-center gap-1 text-xs font-semibold text-primary"
         >
-          {sortDesc ? "الأعلى خطراً أولاً ↓" : "الأقل خطراً أولاً ↑"}
+          {sortDesc ? (
+            <>
+              الأعلى خطراً أولاً
+              <ChevronDown className="h-3.5 w-3.5" strokeWidth={2.5} />
+            </>
+          ) : (
+            <>
+              الأقل خطراً أولاً
+              <ChevronUp className="h-3.5 w-3.5" strokeWidth={2.5} />
+            </>
+          )}
         </button>
       </div>
 
-      {/* Desktop table */}
-      <div className="hidden md:block">
+      {/* Laptop / desktop table */}
+      <div className="hidden lg:block">
         <table className="w-full text-right text-sm">
           <thead>
             <tr className="border-b border-line text-ink-faint dark:border-bg/10">
-              <th className="px-4 py-3 font-semibold">الشركة</th>
-              <th className="px-4 py-3 font-semibold">القطاع</th>
-              <th className="px-4 py-3 font-semibold">الدرجة</th>
-              <th className="px-4 py-3 font-semibold">الاتجاه</th>
+              <th className="px-5 py-3.5 font-semibold">الشركة</th>
+              <th className="px-5 py-3.5 font-semibold">القطاع</th>
+              <th className="px-5 py-3.5 font-semibold w-[40%]">الدرجة</th>
+              <th className="px-5 py-3.5 font-semibold w-16">الاتجاه</th>
             </tr>
           </thead>
           <tbody>
@@ -50,12 +61,12 @@ export default function CompanyTable({ companies, onSelect, sortDesc, onToggleSo
                 onClick={() => onSelect(c.ticker)}
                 className="cursor-pointer border-b border-line/60 transition hover:bg-bg-deep/40 dark:border-bg/5 dark:hover:bg-ink/50"
               >
-                <td className="px-4 py-3">
+                <td className="px-5 py-3.5">
                   <p className="font-bold text-ink dark:text-bg">{c.name_ar}</p>
                   <p className="text-xs text-ink-faint">{c.ticker}</p>
                 </td>
                 <td className="px-4 py-3 text-ink-soft dark:text-bg/70">{c.sector}</td>
-                <td className="px-4 py-3">
+                <td className="px-5 py-3.5">
                   {c.risk_score != null && c.risk_level ? (
                     <div className="flex items-center gap-3">
                       <div className="h-2 w-28 overflow-hidden rounded-full bg-bg-deep dark:bg-ink/60">
@@ -83,7 +94,7 @@ export default function CompanyTable({ companies, onSelect, sortDesc, onToggleSo
       </div>
 
       {/* Mobile cards */}
-      <div className="space-y-2 p-3 md:hidden">
+      <div className="space-y-2 p-3 lg:hidden">
         {companies.map((c) => (
           <button
             key={c.ticker}
