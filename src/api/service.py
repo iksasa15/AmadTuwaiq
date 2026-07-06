@@ -11,6 +11,8 @@ import pandas as pd
 
 from src.models.scoring import RULE_DEFINITIONS, risk_level as compute_risk_level
 
+BENEISH_INDICATORS = ["DSRI", "GMI", "AQI", "SGI", "DEPI", "SGAI", "LVGI", "TATA"]
+
 ROOT = Path(__file__).resolve().parents[2]
 SCORES_FILE = ROOT / "data" / "processed" / "scores.parquet"
 FEATURES_FILE = ROOT / "data" / "processed" / "features.parquet"
@@ -22,8 +24,31 @@ def _to_contract_level(score: float) -> str:
     return compute_risk_level(score)
 
 
-def _int_score(score: float) -> int:
-    return int(round(score))
+def _compute_trend(ticker: str, scores_df: pd.DataFrame) -> str:
+    hist = scores_df[scores_df["ticker"] == ticker].sort_values("year")
+    if len(hist) < 2:
+        return "stable"
+    prev = float(hist.iloc[-2]["risk_score"])
+    cur = float(hist.iloc[-1]["risk_score"])
+    diff = cur - prev
+    if diff > 3:
+        return "up"
+    if diff < -3:
+        return "down"
+    return "stable"
+
+
+def _extract_indicators(row: pd.Series) -> dict:
+    return {k: _safe_float(row.get(k)) for k in BENEISH_INDICATORS}
+
+
+def _sector_avg_indicators(sector: str, features: pd.DataFrame, year: int) -> dict:
+    sector_feat = features[(features["sector"] == sector) & (features["year"] == year)]
+    if sector_feat.empty:
+        sector_feat = features[features["sector"] == sector]
+    if sector_feat.empty:
+        return {k: None for k in BENEISH_INDICATORS}
+    return {k: _safe_float(sector_feat[k].median()) if k in sector_feat else None for k in BENEISH_INDICATORS}
 
 
 def normalize_ticker(ticker: str) -> str:
@@ -96,6 +121,7 @@ class DataService:
                     "sector": r["sector"],
                     "risk_score": _int_score(score),
                     "risk_level": _to_contract_level(score),
+                    "trend": _compute_trend(r["ticker"], self.scores),
                 }
             )
         return rows

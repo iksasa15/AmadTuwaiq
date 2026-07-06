@@ -10,6 +10,31 @@ RiskLevel = Literal["low", "medium", "high", "critical"]
 Severity = Literal["info", "warning", "critical"]
 
 
+BENEISH_INDICATORS = ["DSRI", "GMI", "AQI", "SGI", "DEPI", "SGAI", "LVGI", "TATA"]
+
+INDICATOR_LABELS_AR = {
+    "DSRI": "الذمم / المبيعات",
+    "GMI": "هامش الربح",
+    "AQI": "جودة الأصول",
+    "SGI": "نمو المبيعات",
+    "DEPI": "الإهلاك",
+    "SGAI": "مصاريف بيعية",
+    "LVGI": "الرافعة المالية",
+    "TATA": "الاستحقاقات",
+}
+
+
+class IndicatorSet(BaseModel):
+    DSRI: float | None = None
+    GMI: float | None = None
+    AQI: float | None = None
+    SGI: float | None = None
+    DEPI: float | None = None
+    SGAI: float | None = None
+    LVGI: float | None = None
+    TATA: float | None = None
+
+
 class CompanySummary(BaseModel):
     ticker: str
     name_ar: str
@@ -17,6 +42,7 @@ class CompanySummary(BaseModel):
     sector: str
     risk_score: int
     risk_level: RiskLevel
+    trend: Literal["up", "down", "stable"] = "stable"
 
 
 class ScoreHistoryItem(BaseModel):
@@ -52,6 +78,8 @@ class CompanyDetail(BaseModel):
     top_flags: list[TopFlag]
     key_metrics: KeyMetrics
     shap_top1: str | None = None
+    indicators: IndicatorSet | None = None
+    sector_avg_indicators: IndicatorSet | None = None
 
 
 class FlagItem(BaseModel):
