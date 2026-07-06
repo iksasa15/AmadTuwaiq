@@ -1,143 +1,131 @@
-# رقيب (Raqeeb)
+<div align="center">
 
-> منصة رقابة مالية استباقية لكشف مخاطر الاحتيال في الشركات المدرجة  
-> هاكاثون امد 2026 — مصرف الإنماء × أكاديمية طويق
+# رقيب · Raqeeb
 
-## الهيكل
+**منصة رقابة مالية استباقية** — كشف مخاطر التلاعب في الشركات المدرجة  
+هاكاثون **امد 2026** · مصرف الإنماء × أكاديمية طويق
+
+[![Tests](https://img.shields.io/badge/tests-31%20passing-success)](#)
+[![Python](https://img.shields.io/badge/python-3.11-blue)](#)
+[![FastAPI](https://img.shields.io/badge/API-FastAPI-009688)](#)
+
+</div>
+
+---
+
+## تشغيل سريع (3 أوامر)
+
+```bash
+python3.11 -m venv .venv && source .venv/bin/activate && pip install -r requirements.txt
+python -m src.ingestion.run_all --skip-fetch && python -m src.models.run_beneish
+uvicorn src.api.main:app --reload --port 8000   # + cd frontend && npm run dev
+```
+
+**Swagger:** http://localhost:8000/docs · **Dashboard:** http://localhost:5173
+
+---
+
+## المعمارية
+
+| الطبقة | التقنية | الدور |
+|--------|---------|-------|
+| **Ingestion** | yfinance → parquet | جلب القوائم المالية |
+| **ETL** | pandas, validate | توحيد schema + فحص جودة |
+| **Features** | Beneish (8 مؤشرات) | DSRI, GMI, AQI, SGI, DEPI, SGAI, LVGI, TATA |
+| **Models** | IF + XGBoost + SHAP | كشف شذوذ + احتمال تلاعب |
+| **Scoring** | مركّب 0–100 | `0.40·M + 0.20·IF + 0.15·XGB + 0.25·Rules` |
+| **API** | FastAPI | `/companies`, `/flags`, `/market/overview`, `POST /refresh` |
+| **Frontend** | React + Recharts | لوحة RTL + dark mode |
+
+```
+yfinance ──► ETL ──► features.parquet ──► ML + Beneish ──► scores.parquet + SQLite
+                                                              │
+                                                         FastAPI ──► React Dashboard
+```
+
+---
+
+## الدرجة المركّبة
+
+| المكوّن | الوزن | المصدر |
+|---------|-------|--------|
+| M-Score (Beneish) | 40% | تلاعب محاسبي كلاسيكي |
+| Isolation Forest | 20% | شذوذ قطاعي |
+| XGBoost | 15% | احتمال (حقن synthetic) |
+| قواعد إشارات | 25% | CFO/NI، ذمم، TATA، DEPI… |
+
+**المستويات:** منخفض 0–25 · متوسط 26–50 · مرتفع 51–75 · حرج 76–100
+
+---
+
+## Backtest: موبايلي 2014 ✓
+
+قبل إعلان إعادة الإصدار (نوفمبر 2014)، النظام يعطي **2013 → درجة 57 (مرتفع)** مع M-Score فوق العتبة.
+
+```bash
+python -m src.backtest.mobily
+pytest tests/test_backtest_mobily.py -v
+```
+
+التفاصيل: [`docs/backtest-mobily.md`](docs/backtest-mobily.md)
+
+> **شريحة العرض:** «سنة قبل الإعلان — 4 إشارات حمراء — كان سيرفع علمًا»
+
+---
+
+## الصلابة (اليوم 7)
+
+| حالة | السلوك |
+|------|--------|
+| سنة واحدة فقط | `بيانات غير كافية` — بدون crash |
+| NaN في مؤشرات | درجة من المتاح + شارة **ثقة منخفضة** |
+| بنك | مستبعد من التسجيل + رسالة واضحة |
+| تحديث | `POST /api/v1/refresh` أو `python -m src.refresh` |
+
+```bash
+pytest tests/ -v                    # 31 اختبار
+python -m src.refresh --skip-fetch  # تحديث يدوي
+./scripts/cron_refresh.sh           # جدولة أسبوعية
+```
+
+---
+
+## هيكل المشروع
 
 ```
 ├── data/
-│   ├── companies.csv     # 31 شركة سعودية
-│   ├── raw/              # بيانات yfinance (parquet)
-│   ├── interim/          # بعد التنظيف
-│   └── processed/        # جاهزة للنموذج
+│   ├── companies.csv          # 31 شركة
+│   ├── backtest/              # موبايلي pre-restatement
+│   └── processed/             # features, scores, ml_scores
 ├── src/
-│   ├── ingestion/        # fetch_yf.py
-│   ├── models/           # beneish.py
-│   ├── features/
-│   ├── api/
-│   └── utils/
-├── frontend/             # React + Vite + Tailwind (RTL)
-├── tests/
-├── docs/
-└── notebooks/
+│   ├── ingestion/             # fetch, normalize, validate, run_all
+│   ├── features/build.py
+│   ├── models/                # beneish, scoring, ML, data_quality
+│   ├── backtest/mobily.py
+│   ├── api/                     # FastAPI
+│   └── refresh.py
+├── frontend/                  # React dashboard
+├── docs/                      # api-contract, backtest, scoring
+├── tests/                     # 31 pytest
+└── scripts/cron_refresh.sh
 ```
 
-## إعداد البيئة
+---
+
+## Docker
 
 ```bash
-# Python
-python3.11 -m venv .venv
-source .venv/bin/activate
-pip install -r requirements.txt
-
-# Frontend
-cd frontend && npm install
+docker compose up --build    # api:8000 + web:3000
 ```
 
-## الأوامر الأساسية
+## النشر
 
 ```bash
-# Pipeline كامل (raw → processed)
-python -m src.ingestion.run_all
-
-# بدون إعادة جلب yfinance
-python -m src.ingestion.run_all --skip-fetch
-
-# خطوات منفصلة
-python -m src.ingestion.normalize
-python -m src.ingestion.validate
-python -m src.features.build
-
-# اختبارات
-pytest tests/ -v
-
-# الواجهة
-cd frontend && npm run dev
+cd frontend && npx vercel --prod    # VITE_API_URL=https://your-api/api/v1
+docker compose up api               # Railway / Render
 ```
 
-## اليوم 1 ✓
-
-- هيكل المشروع + `fetch_yf.py` + `beneish.py`
-- 31 شركة في `data/companies.csv`
-
-## اليوم 2 ✓
-
-- `src/ingestion/normalize.py` — توحيد schema + FIELD_MAP
-- `src/ingestion/validate.py` — فحوصات جودة + تقرير
-- `src/features/build.py` — 23 عمود ميزة (Beneish + إضافية)
-- `src/ingestion/from_sheet.py` — دمج CSV يدوي
-- `src/ingestion/run_all.py` — pipeline بأمر واحد
-- `docs/api-contract.md` — عقد API لعضو 2
-
-## اليوم 3 ✓
-
-- `src/models/beneish.py` — `compute_m_score(current, prior)` + عتبات المؤشرات
-- `src/models/scoring.py` — Risk Score مركّب (0–100) + 6 قواعد إشارات
-- `src/models/persist.py` — SQLite (`scores`, `flags`)
-- `src/models/run_beneish.py` — تشغيل + تقرير توزيع
-- اختبار Enron 2000 في `tests/test_beneish.py`
-
-## اليوم 4 ✓
-
-- `src/models/anomaly.py` — Isolation Forest (per-sector)
-- `src/models/xgb_train.py` — حقن تلاعب + XGBoost
-- `src/models/explain.py` — SHAP + تفسير عربي
-- `src/models/train_ml.py` — pipeline ML كامل
-- `reports/model_eval.md` + `reports/shap_summary.png`
-
-```bash
-python -m src.models.train_ml      # تدريب IF + XGB + SHAP
-python -m src.models.run_beneish   # إعادة حساب الدرجة المركّبة
-```
-
-**الدرجة المركّبة (معايرة يوم 5):**
-`0.40·M-Score + 0.20·IF + 0.15·XGB + 0.25·Rules`
-
-## اليوم 5 ✓
-
-- `src/api/main.py` — FastAPI + Swagger `/docs`
-- `src/api/schemas.py` + `src/api/service.py`
-- `docs/scoring-rationale.md` — منطق المعايرة
-- `docker-compose.yml` — api:8000 + web:3000
-- `frontend/` — قائمة شركات + بطاقة تفاصيل (API حقيقي)
-
-```bash
-# Backend
-uvicorn src.api.main:app --reload --port 8000
-
-# Frontend (proxy → API)
-cd frontend && npm run dev
-
-# Docker
-docker compose up --build
-```
-
-**Swagger:** http://localhost:8000/docs
-
-## اليوم 6 ✓ — Dashboard
-
-- **Market Overview:** Hero + donut chart + جدول + فلتر قطاع + فرز
-- **صفحة الشركة:** Score ring 72pt + إشارات حمراء + Recharts (خطي + radar)
-- Skeletons + empty states + error handling
-- Dark mode + responsive mobile
-- `frontend/vercel.json` للنشر
-
-```bash
-# Terminal 1
-uvicorn src.api.main:app --reload --port 8000
-
-# Terminal 2
-cd frontend && npm run dev
-```
-
-**نشر Frontend (Vercel):**
-```bash
-cd frontend && npx vercel --prod
-# عيّن VITE_API_URL=https://your-api.railway.app/api/v1
-```
-
-**نشر API (Railway/Render):** Dockerfile جاهز — `docker compose up api`
+---
 
 ## الفريق
 
@@ -145,9 +133,17 @@ cd frontend && npx vercel --prod
 |-------|-------|
 | المطور الخبير | المعمارية، البيانات، النماذج، API |
 | عضو 2 | React Dashboard |
-| عضو 3 | جمع بيانات يدوي (Google Sheet) |
-| عضو 4 | العرض التقديمي والتوثيق |
+| عضو 3 | جمع بيانات يدوي |
+| عضو 4 | العرض التقديمي |
 
-## المرجع
+**الخطة الكاملة:** [`خطة_تطوير_رقيب.md`](./خطة_تطوير_رقيب.md)
 
-خطة التطوير الكاملة: [`خطة_تطوير_رقيب.md`](./خطة_تطوير_رقيب.md)
+---
+
+<div align="center">
+
+*رقيب — نرصد قبل أن يرصد السوق*
+
+**v0.9-pre-hackathon**
+
+</div>

@@ -35,7 +35,11 @@ export default function MarketOverviewPage({ onSelect }: Props) {
 
   const filtered = useMemo(() => {
     let list = sector ? companies.filter((c) => c.sector === sector) : [...companies];
-    list.sort((a, b) => (sortDesc ? b.risk_score - a.risk_score : a.risk_score - b.risk_score));
+    list.sort((a, b) => {
+      const av = a.risk_score ?? -1;
+      const bv = b.risk_score ?? -1;
+      return sortDesc ? bv - av : av - bv;
+    });
     return list;
   }, [companies, sector, sortDesc]);
 
