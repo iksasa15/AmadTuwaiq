@@ -10,6 +10,7 @@ from src.api.schemas import (
     CompanySummary,
     FlagItem,
     MarketOverview,
+    RefreshResponse,
 )
 from src.api.service import get_service
 
@@ -23,7 +24,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
     allow_credentials=True,
-    allow_methods=["GET", "OPTIONS"],
+    allow_methods=["GET", "POST", "OPTIONS"],
     allow_headers=["*"],
 )
 
@@ -34,8 +35,10 @@ def health():
 
 
 @app.get("/api/v1/companies", response_model=list[CompanySummary])
-def list_companies(sector: str | None = None, min_risk: int = 0):
-    return get_service().list_companies(sector=sector, min_risk=min_risk)
+def list_companies(sector: str | None = None, min_risk: int = 0, include_banks: bool = False):
+    return get_service().list_companies(
+        sector=sector, min_risk=min_risk, include_banks=include_banks
+    )
 
 
 @app.get("/api/v1/companies/{ticker}", response_model=CompanyDetail)
@@ -51,9 +54,26 @@ def company_flags(ticker: str):
     data = get_service().get_company(ticker)
     if data is None:
         raise HTTPException(status_code=404, detail="Company not found")
+    if not data.get("scoring_eligible", True) or data.get("latest_year") is None:
+        return []
     return get_service().get_flags(ticker, period=data["latest_year"])
 
 
 @app.get("/api/v1/market/overview", response_model=MarketOverview)
 def market_overview():
     return get_service().market_overview()
+
+
+@app.post("/api/v1/refresh", response_model=RefreshResponse)
+def refresh_data(skip_fetch: bool = True):
+    """
+    إعادة جلب البيانات وحساب الدرجات — للعرض التقديمي المباشر.
+
+    `skip_fetch=true` (افتراضي): يستخدم parquet المحلي — أسرع.
+    """
+    try:
+        from src.refresh import run_refresh
+
+        return run_refresh(skip_fetch=skip_fetch, skip_ml=True)
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc

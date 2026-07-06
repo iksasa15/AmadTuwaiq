@@ -106,46 +106,169 @@ class DataService:
             return self.scores
         return self.scores.sort_values("year").groupby("ticker", as_index=False).tail(1)
 
+    def _company_meta(self, ticker: str) -> dict | None:
+        if self.companies.empty:
+            return None
+        row = self.companies[self.companies["ticker"] == ticker]
+        if row.empty:
+            return None
+        r = row.iloc[0]
+        return {
+            "ticker": ticker,
+            "name_ar": r["name_ar"],
+            "name_en": r["name_en"],
+            "sector": r["sector"],
+        }
+
+    def _financials_for(self, ticker: str) -> pd.DataFrame:
+        if self.financials.empty:
+            return pd.DataFrame()
+        return self.financials[self.financials["ticker"] == ticker]
+
+    def _assessment(self, ticker: str, sector: str, feature_row: pd.Series | None = None) -> dict:
+        return assess_company(
+            ticker,
+            sector,
+            self._financials_for(ticker),
+            feature_row,
+        )
+
     def list_companies(
         self,
         sector: str | None = None,
         min_risk: int = 0,
+        include_banks: bool = False,
     ) -> list[dict]:
         latest = self._latest_per_company()
-        if latest.empty:
-            return []
+        rows: list[dict] = []
 
-        if sector:
-            latest = latest[latest["sector"] == sector]
-        latest = latest[latest["risk_score"] >= min_risk]
-        latest = latest.sort_values("risk_score", ascending=False)
+        # Scored companies
+        if not latest.empty:
+            scored = latest.copy()
+            if sector:
+                scored = scored[scored["sector"] == sector]
+            scored = scored[scored["risk_score"] >= min_risk]
+            scored = scored.sort_values("risk_score", ascending=False)
 
-        rows = []
-        for _, r in latest.iterrows():
-            score = float(r["risk_score"])
-            rows.append(
-                {
-                    "ticker": r["ticker"],
-                    "name_ar": r["name_ar"],
-                    "name_en": r["name_en"],
-                    "sector": r["sector"],
-                    "risk_score": _int_score(score),
-                    "risk_level": _to_contract_level(score),
-                    "trend": _compute_trend(r["ticker"], self.scores),
-                }
-            )
+            for _, r in scored.iterrows():
+                score = float(r["risk_score"])
+                rows.append(
+                    {
+                        "ticker": r["ticker"],
+                        "name_ar": r["name_ar"],
+                        "name_en": r["name_en"],
+                        "sector": r["sector"],
+                        "risk_score": _int_score(score),
+                        "risk_level": _to_contract_level(score),
+                        "trend": _compute_trend(r["ticker"], self.scores),
+                        "data_status": "partial" if r.get("confidence") == "low" else "ok",
+                        "confidence": r.get("confidence"),
+                        "message_ar": MESSAGES_AR["partial_nan"] if r.get("confidence") == "low" else None,
+                    }
+                )
+
+        scored_tickers = {r["ticker"] for r in rows}
+
+        # Banks / insufficient — listed with note, no score
+        if not self.companies.empty:
+            extras = self.companies.copy()
+            if sector:
+                extras = extras[extras["sector"] == sector]
+            for _, c in extras.iterrows():
+                ticker = c["ticker"]
+                if ticker in scored_tickers:
+                    continue
+                assessment = self._assessment(ticker, c["sector"])
+                if assessment["data_status"] == "bank_excluded":
+                    if not include_banks:
+                        continue
+                elif assessment["data_status"] != "insufficient" and not include_banks:
+                    continue
+                if assessment["data_status"] not in ("bank_excluded", "insufficient"):
+                    continue
+                rows.append(
+                    {
+                        "ticker": ticker,
+                        "name_ar": c["name_ar"],
+                        "name_en": c["name_en"],
+                        "sector": c["sector"],
+                        "risk_score": None,
+                        "risk_level": None,
+                        "trend": "stable",
+                        "data_status": assessment["data_status"],
+                        "confidence": None,
+                        "message_ar": assessment["message_ar"],
+                    }
+                )
+
         return rows
 
     def get_company(self, ticker: str) -> dict | None:
         ticker = normalize_ticker(ticker)
+        meta = self._company_meta(ticker)
+        if meta is None:
+            return None
 
         company_scores = self.scores[self.scores["ticker"] == ticker]
+        fin_group = self._financials_for(ticker)
+
+        feat = pd.DataFrame()
+        if not self.features.empty:
+            feat = self.features[self.features["ticker"] == ticker]
+
+        feature_row = feat.iloc[-1] if not feat.empty else None
+        assessment = self._assessment(
+            ticker,
+            meta["sector"],
+            feature_row,
+        )
+
+        if not assessment["scoring_eligible"]:
+            return {
+                **meta,
+                "risk_score": None,
+                "risk_level": None,
+                "m_score": None,
+                "latest_year": None,
+                "score_history": [],
+                "flags_count": 0,
+                "top_flags": [],
+                "key_metrics": {},
+                "shap_top1": None,
+                "indicators": None,
+                "sector_avg_indicators": None,
+                "data_status": assessment["data_status"],
+                "confidence": assessment["confidence"],
+                "confidence_pct": assessment["confidence_pct"],
+                "message_ar": assessment["message_ar"],
+                "scoring_eligible": False,
+            }
+
         if company_scores.empty:
-            return None
+            return {
+                **meta,
+                "risk_score": None,
+                "risk_level": None,
+                "m_score": None,
+                "latest_year": None,
+                "score_history": [],
+                "flags_count": 0,
+                "top_flags": [],
+                "key_metrics": {},
+                "shap_top1": None,
+                "indicators": None,
+                "sector_avg_indicators": None,
+                "data_status": "insufficient",
+                "confidence": None,
+                "confidence_pct": None,
+                "message_ar": MESSAGES_AR["insufficient"],
+                "scoring_eligible": False,
+            }
 
         company_scores = company_scores.sort_values("year")
         latest = company_scores.iloc[-1]
         score_val = float(latest["risk_score"])
+        period = int(latest["year"])
 
         history = []
         for _, r in company_scores.iterrows():
@@ -157,7 +280,11 @@ class DataService:
                 }
             )
 
-        period = int(latest["year"])
+        confidence = latest.get("confidence") if "confidence" in latest.index else None
+        confidence_pct = latest.get("confidence_pct") if "confidence_pct" in latest.index else None
+        data_status = "partial" if confidence == "low" else "ok"
+        message_ar = MESSAGES_AR["partial_nan"] if confidence == "low" else None
+
         company_flags = self.flags[
             (self.flags["ticker"] == ticker) & (self.flags["period"] == period)
         ] if not self.flags.empty else pd.DataFrame()
@@ -206,6 +333,11 @@ class DataService:
             "shap_top1": latest.get("shap_top1") if "shap_top1" in latest else None,
             "indicators": indicators,
             "sector_avg_indicators": sector_avg,
+            "data_status": data_status,
+            "confidence": confidence,
+            "confidence_pct": float(confidence_pct) if confidence_pct is not None and not pd.isna(confidence_pct) else None,
+            "message_ar": message_ar,
+            "scoring_eligible": True,
         }
 
     def get_flags(self, ticker: str, period: int | None = None) -> list[dict]:
@@ -238,6 +370,7 @@ class DataService:
     def market_overview(self) -> dict:
         latest = self._latest_per_company()
         if latest.empty:
+            banks_n = int(self.companies["sector"].eq("Banks").sum()) if not self.companies.empty else 0
             return {
                 "total_companies": 0,
                 "avg_risk_score": 0.0,
@@ -245,6 +378,8 @@ class DataService:
                 "top_risks": [],
                 "sector_breakdown": [],
                 "updated_at": self.updated_at,
+                "banks_excluded": banks_n,
+                "banks_note_ar": MESSAGES_AR["bank_excluded"] if banks_n else None,
             }
 
         dist = {"low": 0, "medium": 0, "high": 0, "critical": 0}
@@ -276,6 +411,10 @@ class DataService:
             )
         sectors.sort(key=lambda x: x["avg_risk_score"], reverse=True)
 
+        banks_n = 0
+        if not self.companies.empty:
+            banks_n = int(self.companies["sector"].eq("Banks").sum())
+
         return {
             "total_companies": len(latest),
             "avg_risk_score": round(float(latest["risk_score"].mean()), 1),
@@ -283,6 +422,10 @@ class DataService:
             "top_risks": top_risks,
             "sector_breakdown": sectors,
             "updated_at": self.updated_at,
+            "banks_excluded": banks_n,
+            "banks_note_ar": (
+                f"{banks_n} بنك مستبعد — {MESSAGES_AR['bank_excluded']}" if banks_n else None
+            ),
         }
 
 
