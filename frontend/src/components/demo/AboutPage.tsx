@@ -2,10 +2,10 @@ import PageHeader from "../ui/PageHeader";
 import { DEMO_MARKET_STATS } from "../../data/demoExtras";
 import { STRATEGIC_SECTIONS } from "../../data/strategicDemo";
 import { Info, Layers, Radar, Settings } from "../ui/icons";
-import PageHeader from "../ui/PageHeader";
 import Card from "../ui/Card";
 import Section from "../ui/Section";
 import StatCard from "../ui/StatCard";
+import Logo from "../ui/Logo";
 
 export default function AboutPage() {
   return (
@@ -13,9 +13,7 @@ export default function AboutPage() {
       <PageHeader title="هاكاثون امد 2026" description="منصة رقابة مالية استباقية" />
 
       <Card padding="lg" className="mb-8 text-center">
-        <div className="mx-auto mb-4 grid h-16 w-16 place-items-center rounded-[var(--radius-card)] bg-ink text-xl font-black text-bg dark:bg-primary">
-          رق
-        </div>
+        <Logo size="md" className="mx-auto mb-4" />
         <h1 className="page-title">رقيب · Raqeeb</h1>
         <p className="mx-auto mt-3 max-w-xl text-ink-soft dark:text-bg/75">
           منصة رقابة مالية <strong>استباقية</strong> — نرصد مخاطر التلاعب المحاسبي

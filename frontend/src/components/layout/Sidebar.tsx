@@ -2,6 +2,7 @@ import { TAB_ICONS, type TabId } from "../ui/icons";
 import { useTheme } from "../../hooks/useTheme";
 import { Moon, Sun } from "../ui/icons";
 import Button from "../ui/Button";
+import Logo from "../ui/Logo";
 import { cn } from "../../lib/cn";
 
 export type { TabId };
@@ -26,9 +27,7 @@ export default function Sidebar({ active, onChange }: Props) {
   return (
     <aside className="sticky top-0 hidden h-screen w-56 shrink-0 flex-col border-s border-line bg-surface-elevated dark:border-bg/10 lg:flex">
       <div className="flex items-center gap-3 border-b border-line px-5 py-5 dark:border-bg/10">
-        <div className="grid h-10 w-10 place-items-center rounded-[var(--radius-card)] bg-ink text-sm font-black text-bg dark:bg-primary">
-          رق
-        </div>
+        <Logo size="sm" />
         <div>
           <p className="font-bold text-ink dark:text-bg">رقيب</p>
           <p className="text-[10px] text-ink-faint">امد 2026</p>
@@ -90,27 +89,34 @@ export default function Sidebar({ active, onChange }: Props) {
 
 /** شريط علوي للشاشات الأصغر */
 export function TopNav({ active, onChange }: Props) {
+  const { dark, toggle } = useTheme();
+
   return (
-    <nav className="mb-6 flex gap-1 overflow-x-auto rounded-[var(--radius-card)] border border-line bg-surface p-1 dark:border-bg/10 lg:hidden">
-      {TABS.map((t) => {
-        const Icon = t.icon;
-        const isActive = active === t.id;
-        return (
-          <button
-            key={t.id}
-            type="button"
-            onClick={() => onChange(t.id)}
-            title={t.label}
-            className={cn(
-              "flex shrink-0 items-center gap-2 rounded-[var(--radius-control)] px-3 py-2 text-xs font-bold transition",
-              isActive ? "bg-ink text-bg dark:bg-primary" : "text-ink-soft dark:text-bg/70",
-            )}
-          >
-            <Icon className="h-4 w-4" strokeWidth={2} />
-            <span className="hidden sm:inline">{t.label}</span>
-          </button>
-        );
-      })}
-    </nav>
+    <div className="mb-6 flex items-center gap-2 lg:hidden">
+      <nav className="flex min-w-0 flex-1 gap-1 overflow-x-auto rounded-[var(--radius-card)] border border-line bg-surface p-1 dark:border-bg/10">
+        {TABS.map((t) => {
+          const Icon = t.icon;
+          const isActive = active === t.id;
+          return (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => onChange(t.id)}
+              title={t.label}
+              className={cn(
+                "flex shrink-0 items-center gap-2 rounded-[var(--radius-control)] px-3 py-2 text-xs font-bold transition",
+                isActive ? "bg-ink text-bg dark:bg-primary" : "text-ink-soft dark:text-bg/70",
+              )}
+            >
+              <Icon className="h-4 w-4" strokeWidth={2} />
+              <span className="hidden sm:inline">{t.label}</span>
+            </button>
+          );
+        })}
+      </nav>
+      <Button variant="secondary" size="sm" onClick={toggle} aria-label="تبديل الوضع" className="shrink-0 px-2.5">
+        {dark ? <Sun className="h-4 w-4" strokeWidth={2} /> : <Moon className="h-4 w-4" strokeWidth={2} />}
+      </Button>
+    </div>
   );
 }

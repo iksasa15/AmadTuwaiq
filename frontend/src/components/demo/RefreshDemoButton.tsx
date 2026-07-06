@@ -2,6 +2,7 @@ import { useState } from "react";
 import { createDataSource } from "../../api/dataSource";
 import { useDemoMode } from "../../hooks/useDemoMode";
 import { Check, Loader2, RefreshCw } from "../ui/icons";
+import Button from "../ui/Button";
 
 type Props = {
   onRefreshed?: () => void;
@@ -29,11 +30,12 @@ export default function RefreshDemoButton({ onRefreshed }: Props) {
 
   return (
     <div className="flex flex-wrap items-center gap-3">
-      <button
-        type="button"
+      <Button
+        variant="secondary"
+        size="sm"
         onClick={run}
         disabled={loading}
-        className="inline-flex items-center gap-2 rounded-lg border-2 border-primary bg-primary/10 px-4 py-2 text-sm font-bold text-primary transition hover:bg-primary hover:text-white disabled:opacity-50 dark:hover:text-white"
+        className="border-2 border-primary bg-primary/10 text-primary hover:bg-primary hover:text-white"
       >
         {loading ? (
           <>
@@ -46,7 +48,7 @@ export default function RefreshDemoButton({ onRefreshed }: Props) {
             تحديث الدرجات الآن
           </>
         )}
-      </button>
+      </Button>
       {msg && (
         <span className="inline-flex items-center gap-1 text-sm font-semibold text-status-green">
           <Check className="h-4 w-4" strokeWidth={2.5} />

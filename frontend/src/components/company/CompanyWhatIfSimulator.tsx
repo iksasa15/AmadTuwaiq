@@ -3,9 +3,8 @@ import { api, type SimulationResult } from "../../api/client";
 import { RISK_COLOR } from "../../utils/risk";
 import ScoreRing from "./ScoreRing";
 import { RefreshCw, SlidersHorizontal } from "../ui/icons";
-import Card from "../ui/Card";
 import Button from "../ui/Button";
-import Section from "../ui/Section";
+import Card from "../ui/Card";
 import Disclaimer from "../ui/Disclaimer";
 
 const SLIDERS = [
@@ -60,10 +59,10 @@ export default function CompanyWhatIfSimulator({ ticker }: Props) {
 
   return (
     <div className="space-y-6">
-      <Section
-        title="محاكاة ماذا لو؟"
-        icon={<SlidersHorizontal className="h-4 w-4 text-primary" strokeWidth={2} />}
-      />
+      <h2 className="section-title flex items-center gap-2">
+        <SlidersHorizontal className="h-4 w-4 text-primary" strokeWidth={2} />
+        محاكاة ماذا لو؟
+      </h2>
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card>

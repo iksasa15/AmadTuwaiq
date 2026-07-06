@@ -5,6 +5,10 @@ import { useDemoMode } from "../../hooks/useDemoMode";
 import { RISK_COLOR, RISK_LABEL } from "../../utils/risk";
 import CredibilityGauge from "./CredibilityGauge";
 import { Download, Loader2, Upload } from "../ui/icons";
+import Card from "../ui/Card";
+import Button from "../ui/Button";
+import DataTable, { DataTableHead, DataTableRow, DataTableTd, DataTableTh } from "../ui/DataTable";
+import Disclaimer from "../ui/Disclaimer";
 
 type Props = { onSelect?: (ticker: string) => void };
 
@@ -73,15 +77,17 @@ export default function PortfolioScanner({ onSelect }: Props) {
 
   return (
     <div className="space-y-6">
-      <div className="rounded-xl border border-ink/20 bg-ink/5 p-4 dark:bg-ink/30">
+      <Card padding="sm" className="border-ink/20 bg-ink/5 dark:bg-ink/30">
         <p className="text-sm font-bold text-ink dark:text-bg">درع الإنماء — ماسح المحفظة الائتمانية</p>
         <p className="mt-2 text-sm text-ink-soft dark:text-bg/75">
           ارفع ملف CSV أو Excel برموز شركات المحفظة — فرز الانكشاف وتحديد أعلى المخاطر في ثوانٍ.
         </p>
-      </div>
+      </Card>
 
-      <div
-        className="cursor-pointer rounded-xl border-2 border-dashed border-line bg-white p-10 text-center transition hover:border-primary dark:border-bg/20 dark:bg-ink/30"
+      <Card
+        variant="ghost"
+        padding="lg"
+        className="cursor-pointer border-2 text-center transition hover:border-primary"
         onClick={() => inputRef.current?.click()}
         onDragOver={(e) => e.preventDefault()}
         onDrop={(e) => {
@@ -103,7 +109,7 @@ export default function PortfolioScanner({ onSelect }: Props) {
             if (f) handleFile(f);
           }}
         />
-      </div>
+      </Card>
 
       {scanning && (
         <p className="flex items-center justify-center gap-2 text-sm text-ink-soft">
@@ -117,71 +123,67 @@ export default function PortfolioScanner({ onSelect }: Props) {
       {report && (
         <>
           <div className="grid gap-6 lg:grid-cols-[200px_1fr]">
-            <div className="flex flex-col items-center justify-center rounded-xl border border-line bg-white p-6 dark:border-bg/10 dark:bg-ink/30">
+            <Card className="flex flex-col items-center justify-center">
               <CredibilityGauge value={report.portfolio_safety_pct} label="نسبة أمان المحفظة" />
               <p className="mt-2 text-center text-xs text-ink-faint">
                 {report.matched_companies} شركة مطابقة من {report.total_companies}
               </p>
-            </div>
+            </Card>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {[
                 { label: "آمنة", n: report.safe_count, c: RISK_COLOR.low },
                 { label: "مراقبة", n: report.watch_count, c: RISK_COLOR.medium },
                 { label: "خطر", n: report.danger_count, c: RISK_COLOR.high },
               ].map((s) => (
-                <div key={s.label} className="rounded-xl border border-line bg-white p-4 text-center dark:border-bg/10 dark:bg-ink/30">
+                <Card key={s.label} className="text-center">
                   <p className="text-2xl font-black" style={{ color: s.c }}>{s.n}</p>
                   <p className="text-xs text-ink-faint">{s.label}</p>
-                </div>
+                </Card>
               ))}
             </div>
           </div>
 
           {report.unmatched_tickers.length > 0 && (
-            <p className="rounded-lg bg-accent/10 px-4 py-2 text-sm text-accent">
+            <Card variant="accent" padding="sm" className="text-sm text-accent">
               رموز غير معروفة: {report.unmatched_tickers.join(" · ")}
-            </p>
+            </Card>
           )}
 
           <div className="flex justify-end">
-            <button
-              type="button"
-              onClick={exportCsv}
-              className="inline-flex items-center gap-1 text-xs font-bold text-primary hover:underline"
-            >
+            <Button variant="ghost" size="sm" onClick={exportCsv} className="text-primary">
               <Download className="h-3.5 w-3.5" strokeWidth={2} />
               تصدير التقرير (CSV)
-            </button>
+            </Button>
           </div>
 
-          <div className="overflow-x-auto rounded-xl border border-line bg-white dark:border-bg/10 dark:bg-ink/30">
+          <DataTable>
             <table className="w-full text-sm">
-              <thead>
-                <tr className="border-b border-line text-xs text-ink-faint dark:border-bg/10">
-                  <th className="p-3 text-right">الشركة</th>
-                  <th className="p-3 text-right">الدرجة</th>
-                  <th className="p-3 text-right">المستوى</th>
-                  <th className="p-3 text-right">أخطر إشارة</th>
-                </tr>
-              </thead>
+              <DataTableHead>
+                <DataTableTh>الشركة</DataTableTh>
+                <DataTableTh>الدرجة</DataTableTh>
+                <DataTableTh>المستوى</DataTableTh>
+                <DataTableTh>أخطر إشارة</DataTableTh>
+              </DataTableHead>
               <tbody>
                 {sorted.map((row) => (
-                  <tr key={row.ticker} className="border-b border-line/60 hover:bg-bg-deep/30 dark:border-bg/10">
-                    <td className="p-3">
-                      <button type="button" onClick={() => onSelect?.(row.ticker)} className="font-bold text-primary hover:underline">
+                  <DataTableRow key={row.ticker}>
+                    <DataTableTd>
+                      <Button variant="ghost" size="sm" onClick={() => onSelect?.(row.ticker)} className="px-0 font-bold text-primary">
                         {row.name_ar}
-                      </button>
+                      </Button>
                       <span className="mr-2 text-xs text-ink-faint">{row.ticker}</span>
-                    </td>
-                    <td className="p-3 font-black" style={{ color: RISK_COLOR[row.risk_level] }}>{row.risk_score}</td>
-                    <td className="p-3 text-xs">{RISK_LABEL[row.risk_level]}</td>
-                    <td className="p-3 text-xs">{row.top_flag_ar ?? "—"}</td>
-                  </tr>
+                    </DataTableTd>
+                    <DataTableTd className="font-black">
+                      <span style={{ color: RISK_COLOR[row.risk_level] }}>{row.risk_score}</span>
+                    </DataTableTd>
+                    <DataTableTd className="text-xs">{RISK_LABEL[row.risk_level]}</DataTableTd>
+                    <DataTableTd className="text-xs">{row.top_flag_ar ?? "—"}</DataTableTd>
+                  </DataTableRow>
                 ))}
               </tbody>
             </table>
-          </div>
-          <p className="text-[10px] text-ink-faint">مؤشر تحليلي يستدعي تدقيقًا إضافيًا، ليس اتهامًا.</p>
+          </DataTable>
+          <Disclaimer />
         </>
       )}
     </div>

@@ -1,5 +1,8 @@
 import { RISK_COLOR } from "../../utils/risk";
 import { Megaphone } from "../ui/icons";
+import Card from "../ui/Card";
+import Button from "../ui/Button";
+import { cn } from "../../lib/cn";
 
 export type TimelineStep = {
   year: number;
@@ -28,13 +31,15 @@ export default function InteractiveTimeline({ steps, selectedYear, onSelectYear 
           const active = step.year === selectedYear;
           const isCrisis = step.is_crisis || step.year === steps[steps.length - 1]?.year && step.risk_score === 0;
           return (
-            <button
+            <Button
               key={step.year}
-              type="button"
+              variant={active ? "primary" : "ghost"}
+              size="sm"
               onClick={() => onSelectYear(step.year)}
-              className={`flex min-w-[72px] flex-col items-center rounded-lg px-3 py-2 transition ${
-                active ? "bg-ink text-bg dark:bg-primary" : "bg-bg-deep/50 hover:bg-bg-deep dark:bg-ink/40"
-              }`}
+              className={cn(
+                "min-w-[72px] flex-col rounded-[var(--radius-control)]",
+                !active && "bg-bg-deep/50 dark:bg-ink/40",
+              )}
             >
               <span className="text-xs font-bold">{step.year}</span>
               {isCrisis ? (
@@ -47,20 +52,18 @@ export default function InteractiveTimeline({ steps, selectedYear, onSelectYear 
               {step.is_alert && (
                 <span className="mt-0.5 h-1.5 w-1.5 rounded-full bg-accent" title="لحظة الإنذار" />
               )}
-            </button>
+            </Button>
           );
         })}
       </div>
 
       {selected && (
-        <article
-          className={`rounded-xl border p-5 ${
-            selected.is_alert
-              ? "border-accent bg-accent/10"
-              : selected.is_crisis
-                ? "border-primary bg-primary/5"
-                : "border-line bg-white dark:border-bg/10 dark:bg-ink/30"
-          }`}
+        <Card
+          variant={selected.is_alert ? "accent" : selected.is_crisis ? "accent" : "default"}
+          className={cn(
+            selected.is_alert && "border-accent bg-accent/10",
+            selected.is_crisis && !selected.is_alert && "border-primary bg-primary/5",
+          )}
         >
           <div className="flex items-center gap-3">
             <div
@@ -88,7 +91,7 @@ export default function InteractiveTimeline({ steps, selectedYear, onSelectYear 
           {selected.flags > 0 && (
             <p className="mt-2 text-xs font-bold text-accent">{selected.flags} إشارات نشطة</p>
           )}
-        </article>
+        </Card>
       )}
     </div>
   );
