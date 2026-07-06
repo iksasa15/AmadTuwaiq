@@ -12,6 +12,7 @@ import {
   ChevronDown,
   ChevronUp,
   ClipboardList,
+  Check,
   Flag,
   Info,
   Layers,
@@ -27,6 +28,7 @@ import {
   RefreshCw,
   Settings,
   Sun,
+  Wallet,
 } from "lucide-react";
 
 export type TabId = "market" | "alerts" | "mobily" | "sectors" | "about";
@@ -44,6 +46,7 @@ export {
   ChevronDown,
   ChevronUp,
   ClipboardList,
+  Check,
   Flag,
   Info,
   Layers,
@@ -59,6 +62,7 @@ export {
   RefreshCw,
   Settings,
   Sun,
+  Wallet,
 };
 
 export const TAB_ICONS: Record<TabId, LucideIcon> = {

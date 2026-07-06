@@ -4,6 +4,7 @@ import type {
   FlagItem,
   MarketOverview,
 } from "../api/client";
+import { getDemoFinancials } from "./demoFinancials";
 
 /** بيانات عرض — مصممة للـ demo أمام الحكام */
 
@@ -133,7 +134,7 @@ export const MOBILY_TIMELINE = [
   { year: 2011, risk_score: 30, risk_level: "medium" as const, m_score: -2.05, flags: 1, note: "بداية تباعد الذمم عن المبيعات" },
   { year: 2012, risk_score: 44, risk_level: "medium" as const, m_score: -1.81, flags: 2, note: "أرباح بلا تدفق نقدي — سنتان متتاليتان" },
   { year: 2013, risk_score: 57, risk_level: "high" as const, m_score: -1.75, flags: 4, note: "M-Score فوق العتبة — سنة قبل الإعلان" },
-  { year: 2014, risk_score: 0, risk_level: "low" as const, m_score: null, flags: 0, note: "📢 نوفمبر: إعادة إصدار القوائم — خفض 1.43 مليار ريال" },
+  { year: 2014, risk_score: 0, risk_level: "low" as const, m_score: null, flags: 0, note: "نوفمبر: إعادة إصدار القوائم — خفض 1.43 مليار ريال" },
 ];
 
 const DEMO_INDICATORS_4001 = {
@@ -289,9 +290,14 @@ function genericDetail(c: CompanySummary): CompanyDetail {
 
 export function getDemoCompany(ticker: string): CompanyDetail | null {
   const norm = ticker.includes(".") ? ticker : `${ticker}.SR`;
-  if (DEMO_DETAILS[norm]) return DEMO_DETAILS[norm];
-  const summary = DEMO_COMPANIES.find((c) => c.ticker === norm);
-  return summary ? genericDetail(summary) : null;
+  let detail: CompanyDetail | null = null;
+  if (DEMO_DETAILS[norm]) detail = { ...DEMO_DETAILS[norm] };
+  else {
+    const summary = DEMO_COMPANIES.find((c) => c.ticker === norm);
+    detail = summary ? genericDetail(summary) : null;
+  }
+  if (!detail) return null;
+  return { ...detail, financial_statements: getDemoFinancials(norm) };
 }
 
 export function getDemoFlags(ticker: string): FlagItem[] {

@@ -78,7 +78,7 @@ export default function MarketOverviewPage({ onSelect }: Props) {
       <DemoBanner />
 
       {/* Hero */}
-      <section className="mb-6 grid gap-6 rounded-2xl border border-line bg-white p-6 shadow-sm dark:border-bg/10 dark:bg-ink/30 md:grid-cols-2">
+      <section className="mb-6 grid gap-6 rounded-xl border border-line bg-white p-6 shadow-sm dark:border-bg/10 dark:bg-ink/30 lg:grid-cols-[1fr_320px]">
         <div className="flex flex-col justify-center">
           <p className="text-sm font-semibold text-primary">تحت المراقبة الآن</p>
           <p className="mt-2 text-5xl font-black text-ink dark:text-bg">

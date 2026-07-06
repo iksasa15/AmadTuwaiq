@@ -69,6 +69,21 @@ class KeyMetrics(BaseModel):
     receivables_to_revenue_growth: float | None = None
 
 
+class StatementLine(BaseModel):
+    label_ar: str
+    values: list[float | None]
+    bold: bool = False
+    highlight: bool = False
+
+
+class FinancialStatements(BaseModel):
+    years: list[int]
+    unit_label_ar: str
+    income: list[StatementLine]
+    balance: list[StatementLine]
+    cashflow: list[StatementLine]
+
+
 class CompanyDetail(BaseModel):
     ticker: str
     name_ar: str
@@ -90,6 +105,7 @@ class CompanyDetail(BaseModel):
     confidence_pct: float | None = None
     message_ar: str | None = None
     scoring_eligible: bool = True
+    financial_statements: FinancialStatements | None = None
 
 
 class FlagItem(BaseModel):

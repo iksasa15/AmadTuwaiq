@@ -11,6 +11,7 @@ import {
 import { createDataSource } from "../../api/dataSource";
 import { useDemoMode } from "../../hooks/useDemoMode";
 import type { MarketOverview } from "../../api/client";
+import { Info } from "../ui/icons";
 import Header from "../layout/Header";
 import { RISK_COLOR, type RiskLevel } from "../../utils/risk";
 
@@ -75,8 +76,9 @@ export default function SectorsPage() {
       </div>
 
       {overview?.banks_note_ar && (
-        <p className="mt-6 rounded-xl bg-bg-deep/60 p-4 text-sm text-ink-soft dark:bg-ink/40 dark:text-bg/70">
-          ℹ️ {overview.banks_note_ar}
+        <p className="mt-6 flex items-start gap-2 rounded-lg bg-bg-deep/50 p-4 text-sm text-ink-soft dark:bg-ink/40 dark:text-bg/70">
+          <Info className="mt-0.5 h-4 w-4 shrink-0" strokeWidth={2} />
+          <span>{overview.banks_note_ar}</span>
         </p>
       )}
     </>

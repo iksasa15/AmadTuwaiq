@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { createDataSource } from "../../api/dataSource";
 import { useDemoMode } from "../../hooks/useDemoMode";
 import type { CompanyDetail, FlagItem } from "../../api/client";
+import { ArrowRight, ClipboardList, Flag } from "../ui/icons";
 import ErrorBanner from "../ui/ErrorBanner";
 import EmptyState from "../ui/EmptyState";
 import { CompanyPageSkeleton } from "../ui/Skeleton";
@@ -41,7 +42,10 @@ export default function CompanyPage({ ticker, onBack }: Props) {
   if (error) {
     return (
       <div className="space-y-4">
-        <button type="button" onClick={onBack} className="text-sm font-semibold text-primary">← العودة</button>
+        <button type="button" onClick={onBack} className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
+          <ArrowRight className="h-4 w-4" strokeWidth={2} />
+          العودة
+        </button>
         <ErrorBanner message={error} onRetry={load} />
       </div>
     );
@@ -54,7 +58,10 @@ export default function CompanyPage({ ticker, onBack }: Props) {
   if (!company.scoring_eligible && company.message_ar) {
     return (
       <div className="space-y-6">
-        <button type="button" onClick={onBack} className="text-sm font-semibold text-primary">← العودة</button>
+        <button type="button" onClick={onBack} className="inline-flex items-center gap-1 text-sm font-semibold text-primary">
+          <ArrowRight className="h-4 w-4" strokeWidth={2} />
+          العودة
+        </button>
         <header className="rounded-2xl border border-line bg-white p-8 text-center dark:border-bg/10 dark:bg-ink/30">
           <h1 className="text-3xl font-black text-ink dark:text-bg">{company.name_ar}</h1>
           <p className="mt-2 text-ink-soft">{company.ticker} · {company.sector}</p>
@@ -73,9 +80,10 @@ export default function CompanyPage({ ticker, onBack }: Props) {
       <button
         type="button"
         onClick={onBack}
-        className="text-sm font-semibold text-primary hover:underline"
+        className="inline-flex items-center gap-1 text-sm font-semibold text-primary hover:underline"
       >
-        ← العودة
+        <ArrowRight className="h-4 w-4" strokeWidth={2} />
+        العودة
       </button>
 
       <header className="flex flex-col items-center gap-6 rounded-2xl border border-line bg-white p-6 shadow-sm dark:border-bg/10 dark:bg-ink/30 md:flex-row md:items-start md:justify-between">
@@ -95,8 +103,9 @@ export default function CompanyPage({ ticker, onBack }: Props) {
             </p>
           )}
           {demoMode && ticker === "7020.SR" && (
-            <p className="mt-2 inline-block rounded-lg bg-secondary/15 px-3 py-1 text-xs font-bold text-secondary">
-              📋 Backtest 2013 — دراسة حالة موبايلي
+            <p className="mt-2 inline-flex items-center gap-1.5 rounded-lg bg-secondary/12 px-3 py-1 text-xs font-bold text-secondary">
+              <ClipboardList className="h-3.5 w-3.5" strokeWidth={2} />
+              Backtest 2013 — دراسة حالة موبايلي
             </p>
           )}
           {company.shap_top1 && (
@@ -129,7 +138,8 @@ export default function CompanyPage({ ticker, onBack }: Props) {
 
       <section>
         <h2 className="mb-4 flex items-center gap-2 text-xl font-black text-ink dark:text-bg">
-          <span>🚩</span> الإشارات الحمراء
+          <Flag className="h-5 w-5 text-accent" strokeWidth={2} />
+          الإشارات الحمراء
           <span className="rounded-full bg-accent/20 px-2 py-0.5 text-sm font-bold text-accent">{flags.length}</span>
         </h2>
         {flags.length === 0 ? (

@@ -1,3 +1,8 @@
+import type { FinancialStatements as FinancialStatementsData } from "../utils/financials";
+
+export type { FinancialStatementsData as FinancialStatements };
+export type { StatementLine } from "../utils/financials";
+
 export type RiskLevel = "low" | "medium" | "high" | "critical";
 
 export type CompanySummary = {
@@ -32,6 +37,7 @@ export type CompanyDetail = CompanySummary & {
   sector_avg_indicators?: IndicatorSet | null;
   confidence_pct?: number | null;
   scoring_eligible?: boolean;
+  financial_statements?: FinancialStatementsData | null;
 };
 
 export type FlagItem = {

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { createDataSource } from "../../api/dataSource";
 import { useDemoMode } from "../../hooks/useDemoMode";
+import { Check, Loader2, RefreshCw } from "../ui/icons";
 
 type Props = {
   onRefreshed?: () => void;
@@ -17,7 +18,7 @@ export default function RefreshDemoButton({ onRefreshed }: Props) {
     setMsg("");
     try {
       const r = await ds.refresh();
-      setMsg(`✓ تم التحديث — ${r.companies_scored ?? 24} شركة · ${Math.round(Number(r.avg_risk_score ?? 18))} متوسط`);
+      setMsg(`تم التحديث — ${r.companies_scored ?? 24} شركة · ${Math.round(Number(r.avg_risk_score ?? 18))} متوسط`);
       onRefreshed?.();
     } catch {
       setMsg("فشل التحديث");
@@ -32,11 +33,26 @@ export default function RefreshDemoButton({ onRefreshed }: Props) {
         type="button"
         onClick={run}
         disabled={loading}
-        className="rounded-xl border-2 border-primary bg-primary/10 px-5 py-2.5 text-sm font-bold text-primary transition hover:bg-primary hover:text-white disabled:opacity-50 dark:hover:text-white"
+        className="inline-flex items-center gap-2 rounded-lg border-2 border-primary bg-primary/10 px-4 py-2 text-sm font-bold text-primary transition hover:bg-primary hover:text-white disabled:opacity-50 dark:hover:text-white"
       >
-        {loading ? "⏳ جاري التحديث..." : "🔄 تحديث الدرجات الآن"}
+        {loading ? (
+          <>
+            <Loader2 className="h-4 w-4 animate-spin" strokeWidth={2} />
+            جاري التحديث...
+          </>
+        ) : (
+          <>
+            <RefreshCw className="h-4 w-4" strokeWidth={2} />
+            تحديث الدرجات الآن
+          </>
+        )}
       </button>
-      {msg && <span className="text-sm font-semibold text-status-green">{msg}</span>}
+      {msg && (
+        <span className="inline-flex items-center gap-1 text-sm font-semibold text-status-green">
+          <Check className="h-4 w-4" strokeWidth={2.5} />
+          {msg}
+        </span>
+      )}
     </div>
   );
 }

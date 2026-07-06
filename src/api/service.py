@@ -9,6 +9,7 @@ from pathlib import Path
 
 import pandas as pd
 
+from src.api.financials import build_financial_statements
 from src.models.data_quality import MESSAGES_AR, assess_company, is_bank_sector
 from src.models.scoring import RULE_DEFINITIONS, risk_level as compute_risk_level
 
@@ -317,6 +318,8 @@ class DataService:
             indicators = _extract_indicators(row)
             sector_avg = _sector_avg_indicators(latest["sector"], self.features, period)
 
+        fin_stmts = build_financial_statements(self._financials_for(ticker))
+
         return {
             "ticker": ticker,
             "name_ar": latest["name_ar"],
@@ -338,6 +341,7 @@ class DataService:
             "confidence_pct": float(confidence_pct) if confidence_pct is not None and not pd.isna(confidence_pct) else None,
             "message_ar": message_ar,
             "scoring_eligible": True,
+            "financial_statements": fin_stmts,
         }
 
     def get_flags(self, ticker: str, period: int | None = None) -> list[dict]:
