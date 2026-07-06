@@ -84,3 +84,33 @@ def refresh_data(skip_fetch: bool = True):
         return run_refresh(skip_fetch=skip_fetch, skip_ml=True)
     except Exception as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.post("/api/v1/simulate", response_model=SimulationResult)
+def simulate(inp: SimulationInput):
+    try:
+        return run_simulation(inp)
+    except ValueError as exc:
+        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc
+
+
+@app.get("/api/v1/companies/{ticker}/timeline", response_model=TimelineResponse)
+def company_timeline(ticker: str):
+    data = get_timeline(ticker)
+    if data is None:
+        raise HTTPException(status_code=404, detail="Company not found")
+    return data
+
+
+@app.post("/api/v1/portfolio/scan", response_model=PortfolioReport)
+async def scan_portfolio(file: UploadFile = File(...)):
+    try:
+        content = await file.read()
+        tickers = parse_portfolio_file(content, file.filename or "portfolio.csv")
+        return build_portfolio_report(tickers)
+    except ValueError as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=str(exc)) from exc

@@ -6,36 +6,17 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
-from pydantic import BaseModel, Field
 
-from src.api.service import normalize_ticker
-from src.features.build import _beneish_input, _extra_features
-from src.models.beneish import compute_m_score, compute_m_score_from_indicators
+from src.api.schemas import SimulationInput, SimulationResult
+from src.api.service import get_service, normalize_ticker
+from src.features.build import _extra_features
+from src.models.beneish import compute_m_score
 from src.models.scoring import RULE_DEFINITIONS, compute_risk_score, risk_level
 
 ROOT = Path(__file__).resolve().parents[2]
 FEATURES_FILE = ROOT / "data" / "processed" / "features.parquet"
 FINANCIALS_FILE = ROOT / "data" / "processed" / "financials.parquet"
-
-
-class SimulationInput(BaseModel):
-    ticker: str
-    revenue_delta_pct: float = Field(0.0, ge=-50, le=50)
-    receivables_delta_pct: float = Field(0.0, ge=-50, le=100)
-    cogs_delta_pct: float = Field(0.0, ge=-50, le=50)
-    cfo_delta_pct: float = Field(0.0, ge=-50, le=50)
-    depreciation_delta_pct: float = Field(0.0, ge=-50, le=50)
-
-
-class SimulationResult(BaseModel):
-    ticker: str
-    original_score: float
-    simulated_score: float
-    score_delta: float
-    original_level: str
-    simulated_level: str
-    triggered_flags: list[str]
-    removed_flags: list[str]
+SCORES_FILE = ROOT / "data" / "processed" / "scores.parquet"
 
 
 def _apply_pct(value: float | None, delta_pct: float) -> float | None:
@@ -109,7 +90,17 @@ def run_simulation(inp: SimulationInput) -> SimulationResult:
         if_score=float(if_score) if if_score is not None and not pd.isna(if_score) else None,
         xgb_score=float(xgb_score) if xgb_score is not None and not pd.isna(xgb_score) else None,
     )
-    orig_flag_ids = {f.flag_id for f in orig_result["flags"]}
+
+    service = get_service()
+    stored_flags = service.get_flags(ticker, period=latest_year)
+    orig_flag_ids = {f["flag_id"] for f in stored_flags} if stored_flags else {f.flag_id for f in orig_result["flags"]}
+
+    orig_score = float(orig_result["risk_score"])
+    if SCORES_FILE.exists():
+        scores = pd.read_parquet(SCORES_FILE)
+        stored = scores[(scores["ticker"] == ticker) & (scores["year"] == latest_year)]
+        if not stored.empty:
+            orig_score = int(round(float(stored.iloc[0]["risk_score"])))
 
     cur_sim = cur_orig.copy()
     cur_sim["revenue"] = _apply_pct(cur_orig.get("revenue"), inp.revenue_delta_pct)
@@ -139,6 +130,20 @@ def run_simulation(inp: SimulationInput) -> SimulationResult:
     )
     sim_flag_ids = {f.flag_id for f in sim_result["flags"]}
 
+    all_zero = (
+        inp.revenue_delta_pct == 0
+        and inp.receivables_delta_pct == 0
+        and inp.cogs_delta_pct == 0
+        and inp.cfo_delta_pct == 0
+        and inp.depreciation_delta_pct == 0
+    )
+    sim_score = float(sim_result["risk_score"])
+    if all_zero:
+        sim_score = float(orig_score)
+        sim_flag_ids = orig_flag_ids
+    else:
+        sim_score = round(sim_score, 1)
+
     triggered = [
         RULE_DEFINITIONS[fid]["title_ar"]
         for fid in sorted(sim_flag_ids - orig_flag_ids)
@@ -149,9 +154,6 @@ def run_simulation(inp: SimulationInput) -> SimulationResult:
         for fid in sorted(orig_flag_ids - sim_flag_ids)
         if fid in RULE_DEFINITIONS
     ]
-
-    orig_score = float(orig_result["risk_score"])
-    sim_score = float(sim_result["risk_score"])
 
     return SimulationResult(
         ticker=ticker,

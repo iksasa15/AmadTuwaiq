@@ -6,9 +6,9 @@ import io
 from typing import Any
 
 import pandas as pd
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
-from src.api.service import DataService, normalize_ticker, get_service
+from src.api.service import DataService, get_service, normalize_ticker
 from src.models.scoring import RULE_DEFINITIONS, risk_level as compute_risk_level
 
 TICKER_COLUMN_ALIASES = {
