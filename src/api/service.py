@@ -24,6 +24,10 @@ def _to_contract_level(score: float) -> str:
     return compute_risk_level(score)
 
 
+def _int_score(score: float) -> int:
+    return int(round(score))
+
+
 def _compute_trend(ticker: str, scores_df: pd.DataFrame) -> str:
     hist = scores_df[scores_df["ticker"] == ticker].sort_values("year")
     if len(hist) < 2:
@@ -166,7 +170,9 @@ class DataService:
         feat = self.features[
             (self.features["ticker"] == ticker) & (self.features["year"] == period)
         ]
-        metrics = {}
+        metrics: dict = {}
+        indicators = None
+        sector_avg = None
         if not feat.empty:
             row = feat.iloc[0]
             metrics = {
@@ -175,6 +181,8 @@ class DataService:
                 "debt_to_equity": _safe_float(row.get("debt_to_equity")),
                 "receivables_to_revenue_growth": _safe_float(row.get("receivables_to_revenue_growth")),
             }
+            indicators = _extract_indicators(row)
+            sector_avg = _sector_avg_indicators(latest["sector"], self.features, period)
 
         return {
             "ticker": ticker,
@@ -190,6 +198,8 @@ class DataService:
             "top_flags": top_flags,
             "key_metrics": metrics,
             "shap_top1": latest.get("shap_top1") if "shap_top1" in latest else None,
+            "indicators": indicators,
+            "sector_avg_indicators": sector_avg,
         }
 
     def get_flags(self, ticker: str, period: int | None = None) -> list[dict]:
