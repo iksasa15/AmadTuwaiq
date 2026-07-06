@@ -1,17 +1,17 @@
 import { useState } from "react";
-import CompanyDetail from "./components/CompanyDetail";
-import CompanyList from "./components/CompanyList";
+import MarketOverviewPage from "./components/dashboard/MarketOverview";
+import CompanyPage from "./components/company/CompanyPage";
 
 export default function App() {
   const [selected, setSelected] = useState<string | null>(null);
 
   return (
-    <div className="min-h-screen bg-bg">
-      <div className="mx-auto max-w-4xl px-4 py-8 md:px-6">
+    <div className="min-h-screen bg-bg transition-colors dark:bg-[#0a1628]">
+      <div className="mx-auto max-w-6xl px-4 py-6 md:px-8 md:py-10">
         {selected ? (
-          <CompanyDetail ticker={selected} onBack={() => setSelected(null)} />
+          <CompanyPage ticker={selected} onBack={() => setSelected(null)} />
         ) : (
-          <CompanyList onSelect={setSelected} />
+          <MarketOverviewPage onSelect={setSelected} />
         )}
       </div>
     </div>

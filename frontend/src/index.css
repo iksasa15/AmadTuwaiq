@@ -1,5 +1,7 @@
 @import "tailwindcss";
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --color-bg: #F2EFE9;
   --color-bg-deep: #EED6C6;
@@ -19,10 +21,26 @@
   box-sizing: border-box;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   font-family: var(--font-sans);
   background: var(--color-bg);
   color: var(--color-ink);
   direction: rtl;
   margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dark body,
+html.dark body {
+  background: #0a1628;
+  color: #F2EFE9;
+}
+
+::selection {
+  background: var(--color-primary);
+  color: white;
 }
