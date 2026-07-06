@@ -1,0 +1,59 @@
+"""FastAPI — رقيب API v1."""
+
+from __future__ import annotations
+
+from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
+
+from src.api.schemas import (
+    CompanyDetail,
+    CompanySummary,
+    FlagItem,
+    MarketOverview,
+)
+from src.api.service import get_service
+
+app = FastAPI(
+    title="رقيب API",
+    description="منصة رقابة مالية استباقية — كشف مخاطر الاحتيال",
+    version="1.0",
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["GET", "OPTIONS"],
+    allow_headers=["*"],
+)
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok", "service": "raqeeb"}
+
+
+@app.get("/api/v1/companies", response_model=list[CompanySummary])
+def list_companies(sector: str | None = None, min_risk: int = 0):
+    return get_service().list_companies(sector=sector, min_risk=min_risk)
+
+
+@app.get("/api/v1/companies/{ticker}", response_model=CompanyDetail)
+def company_detail(ticker: str):
+    data = get_service().get_company(ticker)
+    if data is None:
+        raise HTTPException(status_code=404, detail="Company not found")
+    return data
+
+
+@app.get("/api/v1/companies/{ticker}/flags", response_model=list[FlagItem])
+def company_flags(ticker: str):
+    data = get_service().get_company(ticker)
+    if data is None:
+        raise HTTPException(status_code=404, detail="Company not found")
+    return get_service().get_flags(ticker, period=data["latest_year"])
+
+
+@app.get("/api/v1/market/overview", response_model=MarketOverview)
+def market_overview():
+    return get_service().market_overview()

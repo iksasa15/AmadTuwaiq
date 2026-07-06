@@ -1,29 +1,108 @@
-# AmadTuwaiq
+# رقيب (Raqeeb)
 
-مشروع React فارغ مع ألوان هوية [هاكاثون امد](https://amad.tuwaiq.edu.sa/).
+> منصة رقابة مالية استباقية لكشف مخاطر الاحتيال في الشركات المدرجة  
+> هاكاثون امد 2026 — مصرف الإنماء × أكاديمية طويق
 
-## الألوان
+## الهيكل
 
-| الاسم | الكود | Tailwind |
-|-------|-------|----------|
-| الخلفية | `#F2EFE9` | `bg-bg` |
-| الخلفية العميقة | `#EED6C6` | `bg-bg-deep` |
-| الأساسي | `#C66E4E` | `bg-primary` / `text-primary` |
-| الثانوي | `#8B84D7` | `bg-secondary` / `text-secondary` |
-| التمييز | `#F58E7C` | `bg-accent` / `text-accent` |
-| النص | `#0C2341` | `text-ink` |
-| نص خفيف | `rgba(12,35,65,0.82)` | `text-ink-soft` |
-| نص باهت | `rgba(12,35,65,0.65)` | `text-ink-faint` |
-| خط فاصل | `rgba(12,35,65,0.12)` | `border-line` |
-| أخضر الحالة | `#22c55e` | `bg-status-green` |
+```
+├── data/
+│   ├── companies.csv     # 31 شركة سعودية
+│   ├── raw/              # بيانات yfinance (parquet)
+│   ├── interim/          # بعد التنظيف
+│   └── processed/        # جاهزة للنموذج
+├── src/
+│   ├── ingestion/        # fetch_yf.py
+│   ├── models/           # beneish.py
+│   ├── features/
+│   ├── api/
+│   └── utils/
+├── frontend/             # React + Vite + Tailwind (RTL)
+├── tests/
+├── docs/
+└── notebooks/
+```
 
-الألوان متوفرة في:
-- `src/index.css` — متغيرات Tailwind
-- `src/theme/colors.ts` — للاستخدام في JavaScript
-
-## التشغيل
+## إعداد البيئة
 
 ```bash
-npm install
-npm run dev
+# Python
+python3.11 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+
+# Frontend
+cd frontend && npm install
 ```
+
+## الأوامر الأساسية
+
+```bash
+# Pipeline كامل (raw → processed)
+python -m src.ingestion.run_all
+
+# بدون إعادة جلب yfinance
+python -m src.ingestion.run_all --skip-fetch
+
+# خطوات منفصلة
+python -m src.ingestion.normalize
+python -m src.ingestion.validate
+python -m src.features.build
+
+# اختبارات
+pytest tests/ -v
+
+# الواجهة
+cd frontend && npm run dev
+```
+
+## اليوم 1 ✓
+
+- هيكل المشروع + `fetch_yf.py` + `beneish.py`
+- 31 شركة في `data/companies.csv`
+
+## اليوم 2 ✓
+
+- `src/ingestion/normalize.py` — توحيد schema + FIELD_MAP
+- `src/ingestion/validate.py` — فحوصات جودة + تقرير
+- `src/features/build.py` — 23 عمود ميزة (Beneish + إضافية)
+- `src/ingestion/from_sheet.py` — دمج CSV يدوي
+- `src/ingestion/run_all.py` — pipeline بأمر واحد
+- `docs/api-contract.md` — عقد API لعضو 2
+
+## اليوم 3 ✓
+
+- `src/models/beneish.py` — `compute_m_score(current, prior)` + عتبات المؤشرات
+- `src/models/scoring.py` — Risk Score مركّب (0–100) + 6 قواعد إشارات
+- `src/models/persist.py` — SQLite (`scores`, `flags`)
+- `src/models/run_beneish.py` — تشغيل + تقرير توزيع
+- اختبار Enron 2000 في `tests/test_beneish.py`
+
+## اليوم 4 ✓
+
+- `src/models/anomaly.py` — Isolation Forest (per-sector)
+- `src/models/xgb_train.py` — حقن تلاعب + XGBoost
+- `src/models/explain.py` — SHAP + تفسير عربي
+- `src/models/train_ml.py` — pipeline ML كامل
+- `reports/model_eval.md` + `reports/shap_summary.png`
+
+```bash
+python -m src.models.train_ml      # تدريب IF + XGB + SHAP
+python -m src.models.run_beneish   # إعادة حساب الدرجة المركّبة
+```
+
+**الدرجة المركّبة (محدّثة):**
+`0.35·M-Score + 0.25·IF + 0.25·XGB + 0.15·Rules`
+
+## الفريق
+
+| العضو | الدور |
+|-------|-------|
+| المطور الخبير | المعمارية، البيانات، النماذج، API |
+| عضو 2 | React Dashboard |
+| عضو 3 | جمع بيانات يدوي (Google Sheet) |
+| عضو 4 | العرض التقديمي والتوثيق |
+
+## المرجع
+
+خطة التطوير الكاملة: [`خطة_تطوير_رقيب.md`](./خطة_تطوير_رقيب.md)

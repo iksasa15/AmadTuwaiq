@@ -1,0 +1,32 @@
+ticker,name_ar,name_en,sector
+2222.SR,أرامكو السعودية,Saudi Aramco,Energy
+1120.SR,مصرف الراجحي,Al Rajhi Bank,Banks
+1180.SR,البنك الأهلي السعودي,Saudi National Bank,Banks
+1010.SR,بنك الرياض,Riyad Bank,Banks
+1150.SR,مصرف الإنماء,Alinma Bank,Banks
+1080.SR,البنك العربي الوطني,Arab National Bank,Banks
+1020.SR,بنك الجزيرة,Bank AlJazira,Banks
+7010.SR,الاتصالات السعودية,stc,Telecom
+7020.SR,اتحاد اتصالات,Etihad Etisalat (Mobily),Telecom
+7030.SR,زين السعودية,Zain KSA,Telecom
+2010.SR,سابك,SABIC,Petrochemicals
+2030.SR,سافكو,SABIC Agri-Nutrients,Petrochemicals
+2250.SR,الصناعات الكيميائية,Saudi Industrial Investment Group,Petrochemicals
+2350.SR,كيان السعودية,Saudi Kayan,Petrochemicals
+2380.SR,بترو رابغ,Petro Rabigh,Petrochemicals
+2060.SR,التصنيع الوطنية,National Industrialization (Tasnee),Petrochemicals
+1211.SR,معادن,Saudi Arabian Mining (Maaden),Materials
+2280.SR,المراعي,Almarai,Food
+4190.SR,جرير,Jarir Marketing,Retail
+4240.SR,إكسترا,United Electronics (Extra),Retail
+4001.SR,العثيم,Abdullah Al Othaim Markets,Retail
+4002.SR,الدريس,Aldrees Petroleum,Retail
+4030.SR,بحري,Bahri,Transport
+4300.SR,دار الأركان,Dar Al Arkan,Real Estate
+8230.SR,صندوق الرياض ريت,Riyad REIT,Real Estate
+5110.SR,الكهرباء السعودية,Saudi Electricity,Utilities
+2140.SR,سليمان الحبيب,Dr Sulaiman Al Habib Medical,Healthcare
+4004.SR,دلة للرعاية,Dallah Healthcare,Healthcare
+8210.SR,بوبا العربية,Bupa Arabia,Insurance
+8310.SR,رابغ للتكرير,Rabigh Refining and Petrochemical,Petrochemicals
+4005.SR,الرعاية الطبية,National Medical Care,Healthcare

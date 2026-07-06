@@ -1,0 +1,1071 @@
+{
+  "2222.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "1120.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ],
+      "2022": [
+        "cogs",
+        "operating_income"
+      ],
+      "2023": [
+        "cogs",
+        "operating_income"
+      ],
+      "2024": [
+        "cogs",
+        "operating_income"
+      ],
+      "2025": [
+        "cogs",
+        "operating_income"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "1180.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ],
+      "2022": [
+        "receivables",
+        "cogs",
+        "operating_income"
+      ],
+      "2023": [
+        "receivables",
+        "cogs",
+        "operating_income"
+      ],
+      "2024": [
+        "receivables",
+        "cogs",
+        "operating_income"
+      ],
+      "2025": [
+        "receivables",
+        "cogs",
+        "operating_income"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "1010.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ],
+      "2022": [
+        "cogs",
+        "operating_income"
+      ],
+      "2023": [
+        "cogs",
+        "operating_income"
+      ],
+      "2024": [
+        "cogs",
+        "operating_income"
+      ],
+      "2025": [
+        "cogs",
+        "operating_income"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "1150.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2022": [
+        "cogs",
+        "operating_income"
+      ],
+      "2023": [
+        "cogs",
+        "operating_income"
+      ],
+      "2024": [
+        "cogs",
+        "operating_income"
+      ],
+      "2025": [
+        "cogs",
+        "operating_income"
+      ]
+    },
+    "years": [
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "1080.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ],
+      "2022": [
+        "cogs",
+        "operating_income"
+      ],
+      "2023": [
+        "cogs",
+        "operating_income"
+      ],
+      "2024": [
+        "cogs",
+        "operating_income"
+      ],
+      "2025": [
+        "cogs",
+        "operating_income"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "1020.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ],
+      "2022": [
+        "cogs",
+        "operating_income"
+      ],
+      "2023": [
+        "receivables",
+        "cogs",
+        "operating_income"
+      ],
+      "2024": [
+        "receivables",
+        "cogs",
+        "operating_income"
+      ],
+      "2025": [
+        "receivables",
+        "cogs",
+        "operating_income"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "7010.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "7020.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "7030.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "2010.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "2030.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ],
+      "2022": [
+        "receivables",
+        "cogs",
+        "total_debt"
+      ],
+      "2023": [
+        "receivables",
+        "cogs"
+      ],
+      "2024": [
+        "receivables",
+        "cogs"
+      ],
+      "2025": [
+        "receivables",
+        "cogs"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "2250.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ],
+      "2022": [
+        "receivables",
+        "cogs",
+        "total_debt"
+      ],
+      "2023": [
+        "receivables",
+        "cogs",
+        "total_debt"
+      ],
+      "2024": [
+        "receivables",
+        "cogs",
+        "total_debt"
+      ],
+      "2025": [
+        "receivables",
+        "cogs",
+        "total_debt"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "2350.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "2380.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "2060.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "1211.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "2280.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "4190.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "4240.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ],
+      "2022": [
+        "receivables"
+      ],
+      "2023": [
+        "receivables"
+      ],
+      "2024": [
+        "receivables"
+      ],
+      "2025": [
+        "receivables"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "4001.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "4002.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "4030.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "4300.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "8230.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ],
+      "2022": [
+        "cogs",
+        "current_assets",
+        "operating_income"
+      ],
+      "2023": [
+        "receivables",
+        "cogs",
+        "current_assets",
+        "sga",
+        "operating_income"
+      ],
+      "2024": [
+        "receivables",
+        "cogs",
+        "current_assets",
+        "sga",
+        "operating_income"
+      ],
+      "2025": [
+        "receivables",
+        "cogs",
+        "current_assets",
+        "sga",
+        "operating_income"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "5110.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "2140.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "4004.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "8210.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ],
+      "2022": [
+        "cogs",
+        "current_assets",
+        "operating_income"
+      ],
+      "2023": [
+        "receivables",
+        "cogs",
+        "current_assets"
+      ],
+      "2024": [
+        "receivables",
+        "cogs",
+        "current_assets"
+      ],
+      "2025": [
+        "receivables",
+        "cogs",
+        "current_assets"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "8310.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "total_liabilities",
+        "total_equity"
+      ],
+      "2022": [
+        "cogs",
+        "current_assets",
+        "total_debt",
+        "operating_income"
+      ],
+      "2023": [
+        "receivables",
+        "cogs",
+        "current_assets",
+        "total_debt",
+        "operating_income"
+      ],
+      "2024": [
+        "receivables",
+        "cogs",
+        "current_assets",
+        "total_debt",
+        "operating_income"
+      ],
+      "2025": [
+        "receivables",
+        "cogs",
+        "current_assets",
+        "total_debt",
+        "operating_income"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  },
+  "4005.SR": {
+    "status": "ok",
+    "missing_by_year": {
+      "2021": [
+        "revenue",
+        "receivables",
+        "cogs",
+        "total_assets",
+        "current_assets",
+        "ppe",
+        "depreciation",
+        "sga",
+        "total_debt",
+        "net_income",
+        "cfo",
+        "operating_income",
+        "total_liabilities",
+        "total_equity"
+      ]
+    },
+    "years": [
+      "2021",
+      "2022",
+      "2023",
+      "2024",
+      "2025"
+    ]
+  }
+}
